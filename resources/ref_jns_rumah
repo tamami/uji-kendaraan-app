@@ -1,0 +1,5 @@
+id int 
+id_jns_kendaraan int
+jns_rumah varchar(30)
+
+primary key(id_jns_kendaraan,id)

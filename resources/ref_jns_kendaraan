@@ -1,0 +1,2 @@
+id int primary  key
+jns_kendaraan varchar(30)

@@ -1,0 +1,17 @@
+id int,
+nama_pemilik varchar(30),
+alamat varchar(30),
+merk varchar(20),
+tipe varchar(20),
+tahun_pembuatan varchar(4),
+id_jns_kendaraan int
+id_jns_bahan_bakar int
+id_jns_rumah int
+noken varchar(10)
+no_uji varchar(8)
+no_rangka varchar(30)
+no_mesin varchar(30)
+id_bahan_karoseri int
+tgl_rekam date
+
+primary key (id, no_uji)

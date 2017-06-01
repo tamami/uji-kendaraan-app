@@ -1,0 +1,11 @@
+id int primary key,
+no_uji varchar(8)
+jns_pengujian varchar(10)
+biaya_pemeriksaan numeric
+biaya_buku_uji numeric
+biaya_tanda_uji numeric
+biaya_tanda_samping numeric
+denda_adm numeric
+tgl_pemeriksaan date
+
+foreign key(no_uji) references data_adm_kendaraan(no_uji)
