@@ -14,7 +14,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
  * @author tamami <tamami.oka@gmail.com>
  */
 @Configuration
-@EnableJpaRepositories("lab.aikibo.repo")
+@EnableJpaRepositories("lab.aikibo.uji.kendaraan.app.repo")
 public class AppConfig {
     
     @Resource

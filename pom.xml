@@ -32,6 +32,7 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.16.16</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -40,10 +41,9 @@
             <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>4.1.7.RELEASE</version>
-            <type>jar</type>
+            <groupId>unknown.binary</groupId>
+            <artifactId>swingx-all-1.6.4</artifactId>
+            <version>SNAPSHOT</version>
         </dependency>
     </dependencies>
     
@@ -53,6 +53,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+            <!--
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -64,6 +65,22 @@
                     </archive>
                 </configuration>
             </plugin>
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <showDeprecation>false</showDeprecation>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
+    <repositories>
+        <repository>
+            <id>unknown-jars-temp-repo</id>
+            <name>A temporary repository created by NetBeans for libraries and jars it could not identify. Please replace the dependencies in this repository with correct ones and delete this repository.</name>
+            <url>file:${project.basedir}/lib</url>
+        </repository>
+    </repositories>
 </project>

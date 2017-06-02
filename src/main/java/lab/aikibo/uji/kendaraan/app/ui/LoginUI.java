@@ -6,7 +6,9 @@
 package lab.aikibo.uji.kendaraan.app.ui;
 
 import javax.swing.JOptionPane;
+import lab.aikibo.uji.kendaraan.app.MainApp;
 import lab.aikibo.uji.kendaraan.app.repo.DatUserRepo;
+import lab.aikibo.uji.kendaraan.app.util.Otentikasi;
 
 /**
  *
@@ -138,7 +140,8 @@ public class LoginUI extends javax.swing.JFrame {
         }
         
         if(Otentikasi.isVerified(datUserRepo, tfUser.getText(), new String(tfPassword.getPassword()))) {
-            
+            setVisible(false);
+            MainApp.fEntrySkrd.setVisible(true);
         }
     }//GEN-LAST:event_btnOkActionPerformed
 
