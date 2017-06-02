@@ -1,0 +1,2 @@
+id int primary key,
+bahan varchar(15)
