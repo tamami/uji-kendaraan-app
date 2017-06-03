@@ -2,8 +2,12 @@ package lab.aikibo.uji.kendaraan.app;
 
 import java.util.List;
 import javax.sql.DataSource;
+import lab.aikibo.uji.kendaraan.app.entity.AdmKendaraan;
 import lab.aikibo.uji.kendaraan.app.entity.DatUser;
+import lab.aikibo.uji.kendaraan.app.repo.AdmKendaraanRepo;
 import lab.aikibo.uji.kendaraan.app.repo.DatUserRepo;
+import lab.aikibo.uji.kendaraan.app.repo.RefJnsKendaraanRepo;
+import lab.aikibo.uji.kendaraan.app.repo.RefJnsRumahRepo;
 import lab.aikibo.uji.kendaraan.app.ui.EntrySkrdUI;
 import lab.aikibo.uji.kendaraan.app.ui.LoginUI;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +29,15 @@ public class MainApp implements CommandLineRunner {
     @Autowired
     DatUserRepo datUserRepo;
     
+    @Autowired
+    AdmKendaraanRepo admKendaraanRepo;
+    
+    @Autowired
+    RefJnsKendaraanRepo refJnsKendaraanRepo;
+    
+    @Autowired
+    RefJnsRumahRepo refJnsRumahRepo;
+    
     public static EntrySkrdUI fEntrySkrd;
     
     public static void main(String args[]) {
@@ -33,13 +46,26 @@ public class MainApp implements CommandLineRunner {
 
     @Override
     public void run(String... strings) throws Exception {
-        List<DatUser> allData = datUserRepo.findAll();
         LoginUI login = new LoginUI(datUserRepo);
         login.setVisible(true);
         
-        fEntrySkrd = new EntrySkrdUI();
+        fEntrySkrd = new EntrySkrdUI(this);
     }
     
+    public DatUserRepo getDatUserRepo() {
+        return datUserRepo;
+    }
     
+    public AdmKendaraanRepo getAdmKendaraanRepo() {
+        return admKendaraanRepo;
+    }
+    
+    public RefJnsKendaraanRepo getRefJnsKendaraanRepo() {
+        return refJnsKendaraanRepo;
+    }
+    
+    public RefJnsRumahRepo getRefJnsRumahRepo() {
+        return refJnsRumahRepo;
+    }
     
 }

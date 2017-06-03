@@ -7,17 +7,44 @@
 package lab.aikibo.uji.kendaraan.app.ui;
 
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import javax.swing.DefaultComboBoxModel;
+import lab.aikibo.uji.kendaraan.app.MainApp;
+import lab.aikibo.uji.kendaraan.app.entity.AdmKendaraan;
+import lab.aikibo.uji.kendaraan.app.entity.RefJnsKendaraan;
+import lab.aikibo.uji.kendaraan.app.entity.RefJnsRumah;
+import lab.aikibo.uji.kendaraan.app.repo.AdmKendaraanRepo;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
  * @author tamami <tamami.oka@gmail.com>
  */
 public class EntrySkrdUI extends javax.swing.JFrame {
-
+    
+    MainApp mainApp;
+    
     /** Creates new form EntrySkrdUI */
     public EntrySkrdUI() {
         initComponents();
+        initData();
+    }
+    
+    private void initData() {
         dpTglDaftar.setDate(new Date());
+        
+        cbJenisKendaraan.removeAllItems();
+        Iterator<RefJnsKendaraan> dataJnsKendaraan = mainApp.getRefJnsKendaraanRepo().findAll().iterator();
+        while(dataJnsKendaraan.hasNext()) {
+            cbJenisKendaraan.addItem(dataJnsKendaraan.next().getJnsKendaraan());
+        }
+    }
+    
+    public EntrySkrdUI(MainApp mainApp) {
+        this.mainApp = mainApp;
+        initComponents();
+        initData();
     }
 
     /** This method is called from within the constructor to
@@ -33,6 +60,18 @@ public class EntrySkrdUI extends javax.swing.JFrame {
         dpTglDaftar = new org.jdesktop.swingx.JXDatePicker();
         jLabel2 = new javax.swing.JLabel();
         tfNoUji = new javax.swing.JTextField();
+        jPanel1 = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        tfNoken = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        tfPemilik = new javax.swing.JTextField();
+        tfAlamat = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        cbJenisKendaraan = new javax.swing.JComboBox<>();
+        cbJnsRumah = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("PENDAFTARAN PENGUJIAN");
@@ -47,6 +86,54 @@ public class EntrySkrdUI extends javax.swing.JFrame {
             }
         });
 
+        jPanel1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+
+        jButton1.setText("SKRD");
+
+        jButton2.setText("Formulir Pendaftaran");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton1)
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
+                .addContainerGap(19, Short.MAX_VALUE))
+        );
+
+        jLabel3.setText("Nomor Kendaraan");
+
+        jLabel4.setText("Pemilik");
+
+        jLabel5.setText("Alamat");
+
+        tfPemilik.setEditable(false);
+
+        tfAlamat.setEditable(false);
+
+        jLabel6.setText("Jenis Kendaraan");
+
+        cbJenisKendaraan.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbJenisKendaraan.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbJenisKendaraanItemStateChanged(evt);
+            }
+        });
+
+        cbJnsRumah.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -54,13 +141,39 @@ public class EntrySkrdUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(tfNoUji)
-                    .addComponent(dpTglDaftar, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE))
-                .addContainerGap(270, Short.MAX_VALUE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jLabel2))
+                                .addGap(28, 28, 28)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(dpTglDaftar, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(tfNoUji, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel6))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(tfNoken)
+                                    .addComponent(cbJenisKendaraan, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel5)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tfAlamat))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(cbJnsRumah, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 148, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tfPemilik)))))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -72,16 +185,46 @@ public class EntrySkrdUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(tfNoUji, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(240, Short.MAX_VALUE))
+                    .addComponent(tfNoUji, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4)
+                    .addComponent(tfPemilik, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(tfNoken, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5)
+                    .addComponent(tfAlamat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(cbJenisKendaraan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbJnsRumah, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 113, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void tfNoUjiFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfNoUjiFocusLost
-        
+        List<AdmKendaraan> dataAdmKendaraan = mainApp.getAdmKendaraanRepo().findByNoUji(tfNoUji.getText());
+        System.out.println("isi list dataKendaraan : " + dataAdmKendaraan.size());
+        tfNoken.setText(((AdmKendaraan) dataAdmKendaraan.get(0)).getNomorKendaraan());
+        tfPemilik.setText(((AdmKendaraan) dataAdmKendaraan.get(0)).getNamaPemilik());
+        tfAlamat.setText(((AdmKendaraan) dataAdmKendaraan.get(0)).getAlamat());
+        cbJenisKendaraan.setSelectedIndex((((AdmKendaraan) dataAdmKendaraan.get(0)).getIdJnsKendaraan() - 1));
     }//GEN-LAST:event_tfNoUjiFocusLost
+
+    private void cbJenisKendaraanItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbJenisKendaraanItemStateChanged
+        // update list jenis rumah-rumah sesuai pilihan ini.
+        DefaultComboBoxModel cbModel = new DefaultComboBoxModel();
+        Iterator<RefJnsRumah> data = mainApp.getRefJnsRumahRepo().findByIdJnsKendaraan((int) cbJenisKendaraan.getSelectedIndex()+1).iterator();
+        while(data.hasNext()) {
+            cbModel.addElement(data.next().getJnsRumah());
+        }
+        cbJnsRumah.setModel(cbModel);
+    }//GEN-LAST:event_cbJenisKendaraanItemStateChanged
 
     /**
      * @param args the command line arguments
@@ -119,10 +262,22 @@ public class EntrySkrdUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> cbJenisKendaraan;
+    private javax.swing.JComboBox<String> cbJnsRumah;
     private org.jdesktop.swingx.JXDatePicker dpTglDaftar;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JTextField tfAlamat;
     private javax.swing.JTextField tfNoUji;
+    private javax.swing.JTextField tfNoken;
+    private javax.swing.JTextField tfPemilik;
     // End of variables declaration//GEN-END:variables
 
 }
