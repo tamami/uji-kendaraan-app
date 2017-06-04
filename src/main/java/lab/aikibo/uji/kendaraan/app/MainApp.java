@@ -10,6 +10,7 @@ import lab.aikibo.uji.kendaraan.app.repo.DatUserRepo;
 import lab.aikibo.uji.kendaraan.app.repo.RefBiayaBukuUjiRepo;
 import lab.aikibo.uji.kendaraan.app.repo.RefJnsKendaraanRepo;
 import lab.aikibo.uji.kendaraan.app.repo.RefJnsRumahRepo;
+import lab.aikibo.uji.kendaraan.app.repo.RefPejabatRepo;
 import lab.aikibo.uji.kendaraan.app.repo.SkrdRepo;
 import lab.aikibo.uji.kendaraan.app.ui.EntrySkrdUI;
 import lab.aikibo.uji.kendaraan.app.ui.LoginUI;
@@ -47,6 +48,9 @@ public class MainApp implements CommandLineRunner {
     @Autowired
     SkrdRepo skrdRepo;
     
+    @Autowired
+    RefPejabatRepo refPejabatRepo;
+    
     public static EntrySkrdUI fEntrySkrd;
     
     public static void main(String args[]) {
@@ -83,6 +87,10 @@ public class MainApp implements CommandLineRunner {
     
     public SkrdRepo getSkrdRepo() {
         return skrdRepo;
+    }
+    
+    public RefPejabatRepo getRefPejabatRepo() {
+        return refPejabatRepo;
     }
     
 }

@@ -16,6 +16,7 @@ import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.MaskFormatter;
 import javax.swing.text.NumberFormatter;
@@ -24,6 +25,7 @@ import lab.aikibo.uji.kendaraan.app.entity.AdmKendaraan;
 import lab.aikibo.uji.kendaraan.app.entity.RefBiayaBukuUji;
 import lab.aikibo.uji.kendaraan.app.entity.RefJnsKendaraan;
 import lab.aikibo.uji.kendaraan.app.entity.RefJnsRumah;
+import lab.aikibo.uji.kendaraan.app.entity.RefPejabat;
 import lab.aikibo.uji.kendaraan.app.entity.Skrd;
 import lab.aikibo.uji.kendaraan.app.repo.AdmKendaraanRepo;
 import org.joda.time.LocalDate;
@@ -39,6 +41,7 @@ public class EntrySkrdUI extends javax.swing.JFrame {
     NumberFormat indoFormat;
     Locale idLocale;
     LocalDate tglHabisUji;
+    DefaultComboBoxModel<String> daftarPejabat = new DefaultComboBoxModel<String>();
     
     /** Creates new form EntrySkrdUI */
     public EntrySkrdUI() {
@@ -72,6 +75,22 @@ public class EntrySkrdUI extends javax.swing.JFrame {
         tfPokokRetribusi.setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(indoFormat)));
         tfDenda.setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(indoFormat)));
         dpTglHabisUji.setDate(tglHabisUji.toDate());
+        
+        cbNamaPejabat.removeAllItems();
+        cbNamaPejabat.setModel(daftarPejabat);
+        Iterator<RefPejabat> dataPejabat = mainApp.getRefPejabatRepo().findAll().iterator();
+        while(dataPejabat.hasNext()) {
+            cbNamaPejabat.addItem(dataPejabat.next().getNama());
+        }
+        
+        updateJabatan();
+    }
+    
+    private void updateJabatan() {
+        if(cbNamaPejabat.getSelectedItem() != null) {
+            List<RefPejabat> listDataPejabat = mainApp.getRefPejabatRepo().findByNama((String) cbNamaPejabat.getSelectedItem());
+            tfJabatan.setText(listDataPejabat.get(0).getJabatan());
+        }
     }
     
     public EntrySkrdUI(MainApp mainApp) {
@@ -98,6 +117,7 @@ public class EntrySkrdUI extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        btnSimpan = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         tfNoken = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
@@ -137,6 +157,10 @@ public class EntrySkrdUI extends javax.swing.JFrame {
         jSeparator4 = new javax.swing.JSeparator();
         jLabel19 = new javax.swing.JLabel();
         tfBiaya = new javax.swing.JFormattedTextField();
+        jLabel20 = new javax.swing.JLabel();
+        cbNamaPejabat = new javax.swing.JComboBox<>();
+        jLabel21 = new javax.swing.JLabel();
+        tfJabatan = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("PENDAFTARAN PENGUJIAN");
@@ -154,15 +178,26 @@ public class EntrySkrdUI extends javax.swing.JFrame {
         jPanel1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
 
         jButton1.setText("SKRD");
+        jButton1.setEnabled(false);
 
         jButton2.setText("Formulir Pendaftaran");
+        jButton2.setEnabled(false);
+
+        btnSimpan.setText("Simpan");
+        btnSimpan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSimpanActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
+                .addComponent(btnSimpan)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1)
@@ -174,8 +209,9 @@ public class EntrySkrdUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
-                    .addComponent(jButton2))
-                .addContainerGap(19, Short.MAX_VALUE))
+                    .addComponent(jButton2)
+                    .addComponent(btnSimpan))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jLabel3.setText("Nomor Kendaraan");
@@ -266,6 +302,14 @@ public class EntrySkrdUI extends javax.swing.JFrame {
         jLabel19.setText("Total Biaya");
 
         tfBiaya.setEditable(false);
+
+        jLabel20.setText("Bendahara Khusus Penerima");
+
+        cbNamaPejabat.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        jLabel21.setText("Jabatan");
+
+        tfJabatan.setEditable(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -365,14 +409,22 @@ public class EntrySkrdUI extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(tfDenda, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(2, 2, 2))
-                    .addComponent(jSeparator4))
+                    .addComponent(jSeparator4)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel19)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tfBiaya, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel20)
+                            .addComponent(jLabel21))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(cbNamaPejabat, 0, 221, Short.MAX_VALUE)
+                            .addComponent(tfJabatan))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel19)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tfBiaya, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(15, 15, 15))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -445,11 +497,19 @@ public class EntrySkrdUI extends javax.swing.JFrame {
                     .addComponent(tfDenda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel19)
                     .addComponent(tfBiaya, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addGap(10, 10, 10)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel20)
+                    .addComponent(cbNamaPejabat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel21)
+                    .addComponent(tfJabatan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -469,6 +529,7 @@ public class EntrySkrdUI extends javax.swing.JFrame {
         
         List<Skrd> dataSkrd = mainApp.getSkrdRepo().findByNoUji(tfNoUji.getText());
         dpTglHabisUjiLalu.setDate(((Skrd) dataSkrd.get(0)).getTglHabisUjiLalu());
+        tfBiaya.setValue(getPokok().add(getDenda()));
     }//GEN-LAST:event_tfNoUjiFocusLost
 
     private void cbJenisKendaraanItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbJenisKendaraanItemStateChanged
@@ -492,9 +553,11 @@ public class EntrySkrdUI extends javax.swing.JFrame {
         tfBiayaTandaUji.setValue(new BigDecimal("10000"));
         if(tfBiayaBukuUji.getValue() != null && tfBiayaPemeriksaan.getValue() != null) {
             tfPokokRetribusi.setValue(getPokok());
+            tfDenda.setValue(getDenda());
+            tfBiaya.setValue(getPokok().add(getDenda()));
         }
         
-        tfDenda.setValue(getDenda());
+        
     }//GEN-LAST:event_cbJenisKendaraanItemStateChanged
 
     private void rbYaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbYaItemStateChanged
@@ -502,6 +565,7 @@ public class EntrySkrdUI extends javax.swing.JFrame {
             List<RefBiayaBukuUji> dataBiayaBujiUji = mainApp.getRefBiayaBukuUjiRepo().findAll();
             tfBiayaBukuUji.setValue(((RefBiayaBukuUji) dataBiayaBujiUji.get(0)).getTarif());
             tfPokokRetribusi.setValue(getPokok());
+            tfBiaya.setValue(getPokok().add(getDenda()));
         } else { tfBiayaBukuUji.setText("0"); }
     }//GEN-LAST:event_rbYaItemStateChanged
 
@@ -511,8 +575,18 @@ public class EntrySkrdUI extends javax.swing.JFrame {
         }
         if(tfBiayaPemeriksaan.getValue() != null) {
             tfPokokRetribusi.setValue(getPokok());
+            tfBiaya.setValue(getPokok().add(getDenda()));
         }
     }//GEN-LAST:event_rbTidakItemStateChanged
+
+    private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
+        int pilihan = JOptionPane.showConfirmDialog(this, "Data akan disimpan.\n" +
+                "Apakah data pemilik akan diubah?", "Konfirmasi",
+                JOptionPane.YES_NO_OPTION);
+        if(pilihan == JOptionPane.YES_OPTION) {
+            
+        }
+    }//GEN-LAST:event_btnSimpanActionPerformed
 
     
     private BigDecimal getPokok() {
@@ -527,8 +601,10 @@ public class EntrySkrdUI extends javax.swing.JFrame {
     
     private BigDecimal getDenda() {
         BigDecimal result = new BigDecimal("0");
-        LocalDate tglDaftar = LocalDate.fromDateFields(dpTglDaftar.getDate());
-        LocalDate tglHabisUjiLalu = LocalDate.fromDateFields(dpTglHabisUjiLalu.getDate());
+        LocalDate tglDaftar = LocalDate.now();
+        if(dpTglDaftar.getDate() != null) LocalDate.fromDateFields(dpTglDaftar.getDate());
+        LocalDate tglHabisUjiLalu = LocalDate.now();
+        if(dpTglHabisUjiLalu.getDate() != null) LocalDate.fromDateFields(dpTglHabisUjiLalu.getDate());
         BigDecimal denda = new BigDecimal("0.02");
         
         if(tglDaftar.isAfter(tglHabisUjiLalu)) {
@@ -583,8 +659,10 @@ public class EntrySkrdUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup btnGrpGantiBuku;
+    private javax.swing.JButton btnSimpan;
     private javax.swing.JComboBox<String> cbJenisKendaraan;
     private javax.swing.JComboBox<String> cbJnsRumah;
+    private javax.swing.JComboBox<String> cbNamaPejabat;
     private org.jdesktop.swingx.JXDatePicker dpTglDaftar;
     private org.jdesktop.swingx.JXDatePicker dpTglHabisUji;
     private org.jdesktop.swingx.JXDatePicker dpTglHabisUjiLalu;
@@ -602,6 +680,8 @@ public class EntrySkrdUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -624,6 +704,7 @@ public class EntrySkrdUI extends javax.swing.JFrame {
     private javax.swing.JFormattedTextField tfBiayaTandaSamping;
     private javax.swing.JFormattedTextField tfBiayaTandaUji;
     private javax.swing.JFormattedTextField tfDenda;
+    private javax.swing.JTextField tfJabatan;
     private javax.swing.JTextField tfJnsPengujian;
     private javax.swing.JTextField tfNoUji;
     private javax.swing.JTextField tfNoken;
