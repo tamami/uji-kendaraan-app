@@ -6,15 +6,27 @@
 
 package lab.aikibo.uji.kendaraan.app.ui;
 
+import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.MaskFormatter;
+import javax.swing.text.NumberFormatter;
 import lab.aikibo.uji.kendaraan.app.MainApp;
 import lab.aikibo.uji.kendaraan.app.entity.AdmKendaraan;
+import lab.aikibo.uji.kendaraan.app.entity.RefBiayaBukuUji;
 import lab.aikibo.uji.kendaraan.app.entity.RefJnsKendaraan;
 import lab.aikibo.uji.kendaraan.app.entity.RefJnsRumah;
+import lab.aikibo.uji.kendaraan.app.entity.Skrd;
 import lab.aikibo.uji.kendaraan.app.repo.AdmKendaraanRepo;
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -24,6 +36,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class EntrySkrdUI extends javax.swing.JFrame {
     
     MainApp mainApp;
+    NumberFormat indoFormat;
+    Locale idLocale;
+    LocalDate tglHabisUji;
     
     /** Creates new form EntrySkrdUI */
     public EntrySkrdUI() {
@@ -33,12 +48,30 @@ public class EntrySkrdUI extends javax.swing.JFrame {
     
     private void initData() {
         dpTglDaftar.setDate(new Date());
+        tglHabisUji = LocalDate.now().plusMonths(6);
         
         cbJenisKendaraan.removeAllItems();
         Iterator<RefJnsKendaraan> dataJnsKendaraan = mainApp.getRefJnsKendaraanRepo().findAll().iterator();
         while(dataJnsKendaraan.hasNext()) {
             cbJenisKendaraan.addItem(dataJnsKendaraan.next().getJnsKendaraan());
         }
+        
+        try {
+            tfTahunPembuatan.setFormatterFactory(new DefaultFormatterFactory(new MaskFormatter("####")));
+        } catch (ParseException ex) {
+            System.out.println("Error saat pembuatan format tahun pembuatan kendaraan");
+        }
+        
+        idLocale = Locale.forLanguageTag("in_ID");
+        
+        indoFormat = NumberFormat.getNumberInstance(Locale.forLanguageTag("in_ID"));
+        tfBiayaBukuUji.setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(indoFormat)));
+        tfBiayaPemeriksaan.setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(indoFormat)));
+        tfBiayaAdm.setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(indoFormat)));
+        tfBiayaTandaUji.setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(indoFormat)));
+        tfPokokRetribusi.setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(indoFormat)));
+        tfDenda.setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(indoFormat)));
+        dpTglHabisUji.setDate(tglHabisUji.toDate());
     }
     
     public EntrySkrdUI(MainApp mainApp) {
@@ -56,6 +89,8 @@ public class EntrySkrdUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        btnGrpGantiBuku = new javax.swing.ButtonGroup();
+        jSeparator3 = new javax.swing.JSeparator();
         jLabel1 = new javax.swing.JLabel();
         dpTglDaftar = new org.jdesktop.swingx.JXDatePicker();
         jLabel2 = new javax.swing.JLabel();
@@ -72,6 +107,36 @@ public class EntrySkrdUI extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         cbJenisKendaraan = new javax.swing.JComboBox<>();
         cbJnsRumah = new javax.swing.JComboBox<>();
+        tfTahunPembuatan = new javax.swing.JFormattedTextField();
+        jLabel7 = new javax.swing.JLabel();
+        tfJnsPengujian = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        rbYa = new javax.swing.JRadioButton();
+        rbTidak = new javax.swing.JRadioButton();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        tfBiayaBukuUji = new javax.swing.JFormattedTextField();
+        jLabel11 = new javax.swing.JLabel();
+        tfBiayaPemeriksaan = new javax.swing.JFormattedTextField();
+        jLabel12 = new javax.swing.JLabel();
+        tfBiayaTandaSamping = new javax.swing.JFormattedTextField();
+        jLabel13 = new javax.swing.JLabel();
+        tfBiayaAdm = new javax.swing.JFormattedTextField();
+        jLabel14 = new javax.swing.JLabel();
+        tfBiayaTandaUji = new javax.swing.JFormattedTextField();
+        tfPokokRetribusi = new javax.swing.JFormattedTextField();
+        jSeparator1 = new javax.swing.JSeparator();
+        jLabel15 = new javax.swing.JLabel();
+        jSeparator2 = new javax.swing.JSeparator();
+        jLabel16 = new javax.swing.JLabel();
+        dpTglHabisUji = new org.jdesktop.swingx.JXDatePicker();
+        jLabel17 = new javax.swing.JLabel();
+        dpTglHabisUjiLalu = new org.jdesktop.swingx.JXDatePicker();
+        jLabel18 = new javax.swing.JLabel();
+        tfDenda = new javax.swing.JFormattedTextField();
+        jSeparator4 = new javax.swing.JSeparator();
+        jLabel19 = new javax.swing.JLabel();
+        tfBiaya = new javax.swing.JFormattedTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("PENDAFTARAN PENGUJIAN");
@@ -134,6 +199,74 @@ public class EntrySkrdUI extends javax.swing.JFrame {
 
         cbJnsRumah.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
+        jLabel7.setText("Jenis Pengujian");
+
+        tfJnsPengujian.setEditable(false);
+        tfJnsPengujian.setText("BERKALA");
+
+        jLabel8.setText("Ganti Buku");
+
+        btnGrpGantiBuku.add(rbYa);
+        rbYa.setText("Ya");
+        rbYa.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                rbYaItemStateChanged(evt);
+            }
+        });
+
+        btnGrpGantiBuku.add(rbTidak);
+        rbTidak.setText("Tidak");
+        rbTidak.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                rbTidakItemStateChanged(evt);
+            }
+        });
+
+        jLabel9.setText("Retribusi");
+
+        jLabel10.setText("Buku Uji");
+
+        tfBiayaBukuUji.setEditable(false);
+        tfBiayaBukuUji.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        jLabel11.setText("Pemeriksaan");
+
+        tfBiayaPemeriksaan.setEditable(false);
+        tfBiayaPemeriksaan.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        jLabel12.setText("Tanda Samping");
+
+        tfBiayaTandaSamping.setEditable(false);
+        tfBiayaTandaSamping.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        jLabel13.setText("Biaya Administrasi");
+
+        tfBiayaAdm.setEditable(false);
+        tfBiayaAdm.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        jLabel14.setText("Tanda Uji");
+
+        tfBiayaTandaUji.setEditable(false);
+        tfBiayaTandaUji.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        tfPokokRetribusi.setEditable(false);
+        tfPokokRetribusi.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        jLabel15.setText("Pokok Terhutang");
+
+        jLabel16.setText("Habis Uji");
+
+        jLabel17.setText("Habis Uji Lalu");
+
+        jLabel18.setText("Denda 2%");
+
+        tfDenda.setEditable(false);
+        tfDenda.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        jLabel19.setText("Total Biaya");
+
+        tfBiaya.setEditable(false);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -143,23 +276,45 @@ public class EntrySkrdUI extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel1)
-                                    .addComponent(jLabel2))
-                                .addGap(28, 28, 28)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(dpTglDaftar, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(tfNoUji, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(8, 8, 8)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel3)
-                                    .addComponent(jLabel6))
+                                    .addComponent(jLabel6)
+                                    .addComponent(jLabel7)
+                                    .addComponent(jLabel8)
+                                    .addComponent(jLabel9))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(tfNoken)
-                                    .addComponent(cbJenisKendaraan, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                    .addComponent(cbJenisKendaraan, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(tfJnsPengujian)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(rbYa)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(rbTidak)
+                                        .addGap(0, 75, Short.MAX_VALUE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel10)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(tfBiayaBukuUji))))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel12)
+                                    .addComponent(jLabel14))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(tfBiayaTandaUji, javax.swing.GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE)
+                                    .addComponent(tfBiayaTandaSamping)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel1))
+                                .addGap(28, 28, 28)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(dpTglDaftar, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(tfNoUji, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -167,13 +322,57 @@ public class EntrySkrdUI extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(tfAlamat))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(cbJnsRumah, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 148, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tfPemilik)))))
+                                .addComponent(tfPemilik))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(cbJnsRumah, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tfTahunPembuatan, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 115, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel13)
+                                    .addComponent(jLabel11))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(tfBiayaPemeriksaan, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
+                                    .addComponent(tfBiayaAdm, javax.swing.GroupLayout.Alignment.LEADING))
+                                .addGap(7, 7, 7))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jSeparator1)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(jLabel15)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tfPokokRetribusi, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(7, 7, 7))
+                    .addComponent(jSeparator2)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel16)
+                                .addGap(73, 73, 73)
+                                .addComponent(dpTglHabisUji, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel17)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(dpTglHabisUjiLalu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tfDenda, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(2, 2, 2))
+                    .addComponent(jSeparator4))
                 .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel19)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tfBiaya, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(15, 15, 15))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -198,8 +397,59 @@ public class EntrySkrdUI extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(cbJenisKendaraan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cbJnsRumah, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 113, Short.MAX_VALUE)
+                    .addComponent(cbJnsRumah, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tfTahunPembuatan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(tfJnsPengujian, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(rbYa)
+                    .addComponent(rbTidak))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(jLabel10)
+                    .addComponent(tfBiayaBukuUji, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel11)
+                    .addComponent(tfBiayaPemeriksaan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel12)
+                    .addComponent(tfBiayaTandaSamping, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel13)
+                    .addComponent(tfBiayaAdm, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel14)
+                    .addComponent(tfBiayaTandaUji, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(tfPokokRetribusi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel15))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel16)
+                    .addComponent(dpTglHabisUji, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel17)
+                    .addComponent(dpTglHabisUjiLalu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel18)
+                    .addComponent(tfDenda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel19)
+                    .addComponent(tfBiaya, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -208,12 +458,17 @@ public class EntrySkrdUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void tfNoUjiFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfNoUjiFocusLost
+        if(tfNoUji.getText().trim().equals("")) return;
+        
         List<AdmKendaraan> dataAdmKendaraan = mainApp.getAdmKendaraanRepo().findByNoUji(tfNoUji.getText());
-        System.out.println("isi list dataKendaraan : " + dataAdmKendaraan.size());
         tfNoken.setText(((AdmKendaraan) dataAdmKendaraan.get(0)).getNomorKendaraan());
         tfPemilik.setText(((AdmKendaraan) dataAdmKendaraan.get(0)).getNamaPemilik());
         tfAlamat.setText(((AdmKendaraan) dataAdmKendaraan.get(0)).getAlamat());
         cbJenisKendaraan.setSelectedIndex((((AdmKendaraan) dataAdmKendaraan.get(0)).getIdJnsKendaraan() - 1));
+        tfTahunPembuatan.setText(((AdmKendaraan) dataAdmKendaraan.get(0)).getThnPembuatan());
+        
+        List<Skrd> dataSkrd = mainApp.getSkrdRepo().findByNoUji(tfNoUji.getText());
+        dpTglHabisUjiLalu.setDate(((Skrd) dataSkrd.get(0)).getTglHabisUjiLalu());
     }//GEN-LAST:event_tfNoUjiFocusLost
 
     private void cbJenisKendaraanItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbJenisKendaraanItemStateChanged
@@ -224,8 +479,73 @@ public class EntrySkrdUI extends javax.swing.JFrame {
             cbModel.addElement(data.next().getJnsRumah());
         }
         cbJnsRumah.setModel(cbModel);
+        
+        if(cbJenisKendaraan.getItemCount() > 0) {
+            List<RefJnsKendaraan> dataJnsKendaraan = mainApp.getRefJnsKendaraanRepo().findById(cbJenisKendaraan.getSelectedIndex() + 1);
+            tfBiayaPemeriksaan.setValue(((RefJnsKendaraan) dataJnsKendaraan.get(0)).getTrfPemeriksaan());
+        }
+        
+        rbTidak.setSelected(true);
+        
+        tfBiayaTandaSamping.setValue(new BigDecimal("15000"));
+        tfBiayaAdm.setValue(new BigDecimal("0"));
+        tfBiayaTandaUji.setValue(new BigDecimal("10000"));
+        if(tfBiayaBukuUji.getValue() != null && tfBiayaPemeriksaan.getValue() != null) {
+            tfPokokRetribusi.setValue(getPokok());
+        }
+        
+        tfDenda.setValue(getDenda());
     }//GEN-LAST:event_cbJenisKendaraanItemStateChanged
 
+    private void rbYaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbYaItemStateChanged
+        if(rbYa.isSelected()) {
+            List<RefBiayaBukuUji> dataBiayaBujiUji = mainApp.getRefBiayaBukuUjiRepo().findAll();
+            tfBiayaBukuUji.setValue(((RefBiayaBukuUji) dataBiayaBujiUji.get(0)).getTarif());
+            tfPokokRetribusi.setValue(getPokok());
+        } else { tfBiayaBukuUji.setText("0"); }
+    }//GEN-LAST:event_rbYaItemStateChanged
+
+    private void rbTidakItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbTidakItemStateChanged
+        if(rbTidak.isSelected()) {
+            tfBiayaBukuUji.setValue(new BigDecimal("0"));
+        }
+        if(tfBiayaPemeriksaan.getValue() != null) {
+            tfPokokRetribusi.setValue(getPokok());
+        }
+    }//GEN-LAST:event_rbTidakItemStateChanged
+
+    
+    private BigDecimal getPokok() {
+        BigDecimal result = (BigDecimal) tfBiayaBukuUji.getValue();
+        result = result.add((BigDecimal) tfBiayaPemeriksaan.getValue());
+        result = result.add((BigDecimal) tfBiayaTandaSamping.getValue());
+        result = result.add((BigDecimal) tfBiayaAdm.getValue());
+        result = result.add((BigDecimal) tfBiayaTandaUji.getValue());
+        
+        return result;
+    }
+    
+    private BigDecimal getDenda() {
+        BigDecimal result = new BigDecimal("0");
+        LocalDate tglDaftar = LocalDate.fromDateFields(dpTglDaftar.getDate());
+        LocalDate tglHabisUjiLalu = LocalDate.fromDateFields(dpTglHabisUjiLalu.getDate());
+        BigDecimal denda = new BigDecimal("0.02");
+        
+        if(tglDaftar.isAfter(tglHabisUjiLalu)) {
+            BigDecimal pokok = (BigDecimal) tfPokokRetribusi.getValue();
+            int selisihBulan = 0;
+            if(tglDaftar.getDayOfMonth() > tglHabisUjiLalu.getDayOfMonth()) { 
+                selisihBulan = tglDaftar.getMonthOfYear() - tglHabisUjiLalu.getMonthOfYear() + 1;
+            } else {
+                selisihBulan = tglDaftar.getMonthOfYear() - tglHabisUjiLalu.getMonthOfYear();
+            }
+            result = result.multiply(pokok);
+            result = result.multiply(new BigDecimal(selisihBulan));
+        }
+        
+        return result;
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -262,22 +582,54 @@ public class EntrySkrdUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup btnGrpGantiBuku;
     private javax.swing.JComboBox<String> cbJenisKendaraan;
     private javax.swing.JComboBox<String> cbJnsRumah;
     private org.jdesktop.swingx.JXDatePicker dpTglDaftar;
+    private org.jdesktop.swingx.JXDatePicker dpTglHabisUji;
+    private org.jdesktop.swingx.JXDatePicker dpTglHabisUjiLalu;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JSeparator jSeparator4;
+    private javax.swing.JRadioButton rbTidak;
+    private javax.swing.JRadioButton rbYa;
     private javax.swing.JTextField tfAlamat;
+    private javax.swing.JFormattedTextField tfBiaya;
+    private javax.swing.JFormattedTextField tfBiayaAdm;
+    private javax.swing.JFormattedTextField tfBiayaBukuUji;
+    private javax.swing.JFormattedTextField tfBiayaPemeriksaan;
+    private javax.swing.JFormattedTextField tfBiayaTandaSamping;
+    private javax.swing.JFormattedTextField tfBiayaTandaUji;
+    private javax.swing.JFormattedTextField tfDenda;
+    private javax.swing.JTextField tfJnsPengujian;
     private javax.swing.JTextField tfNoUji;
     private javax.swing.JTextField tfNoken;
     private javax.swing.JTextField tfPemilik;
+    private javax.swing.JFormattedTextField tfPokokRetribusi;
+    private javax.swing.JFormattedTextField tfTahunPembuatan;
     // End of variables declaration//GEN-END:variables
 
 }

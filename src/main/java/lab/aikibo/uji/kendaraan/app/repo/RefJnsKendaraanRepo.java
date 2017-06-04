@@ -7,5 +7,6 @@ import org.springframework.data.repository.CrudRepository;
 public interface RefJnsKendaraanRepo extends CrudRepository<RefJnsKendaraan, Integer> {
     
     List<RefJnsKendaraan> findAll();
+    List<RefJnsKendaraan> findById(int id);
     
 }

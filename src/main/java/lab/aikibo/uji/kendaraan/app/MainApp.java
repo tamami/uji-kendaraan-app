@@ -4,10 +4,13 @@ import java.util.List;
 import javax.sql.DataSource;
 import lab.aikibo.uji.kendaraan.app.entity.AdmKendaraan;
 import lab.aikibo.uji.kendaraan.app.entity.DatUser;
+import lab.aikibo.uji.kendaraan.app.entity.RefBiayaBukuUji;
 import lab.aikibo.uji.kendaraan.app.repo.AdmKendaraanRepo;
 import lab.aikibo.uji.kendaraan.app.repo.DatUserRepo;
+import lab.aikibo.uji.kendaraan.app.repo.RefBiayaBukuUjiRepo;
 import lab.aikibo.uji.kendaraan.app.repo.RefJnsKendaraanRepo;
 import lab.aikibo.uji.kendaraan.app.repo.RefJnsRumahRepo;
+import lab.aikibo.uji.kendaraan.app.repo.SkrdRepo;
 import lab.aikibo.uji.kendaraan.app.ui.EntrySkrdUI;
 import lab.aikibo.uji.kendaraan.app.ui.LoginUI;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +41,12 @@ public class MainApp implements CommandLineRunner {
     @Autowired
     RefJnsRumahRepo refJnsRumahRepo;
     
+    @Autowired
+    RefBiayaBukuUjiRepo refBiayaBukuUjiRepo;
+    
+    @Autowired
+    SkrdRepo skrdRepo;
+    
     public static EntrySkrdUI fEntrySkrd;
     
     public static void main(String args[]) {
@@ -66,6 +75,14 @@ public class MainApp implements CommandLineRunner {
     
     public RefJnsRumahRepo getRefJnsRumahRepo() {
         return refJnsRumahRepo;
+    }
+    
+    public RefBiayaBukuUjiRepo getRefBiayaBukuUjiRepo() {
+        return refBiayaBukuUjiRepo;
+    }
+    
+    public SkrdRepo getSkrdRepo() {
+        return skrdRepo;
     }
     
 }

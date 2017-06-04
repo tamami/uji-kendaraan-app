@@ -1,29 +1,23 @@
 package lab.aikibo.uji.kendaraan.app.entity;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.Data;
 
-/**
- *
- * @author tamami <tamami.oka@gmail.com>
- */
 @Entity
-@Table(name="ref_jns_kendaraan")
+@Table(name="ref_biaya_buku_uji")
 @Data
-public class RefJnsKendaraan {
+public class RefBiayaBukuUji {
     
     @Id
     @Column(name="id")
     private int id;
     
-    @Column(name="jns_kendaraan")
-    private String jnsKendaraan;
-    
-    @Column(name="tarif_pemeriksaan")
-    private BigDecimal trfPemeriksaan;
+    @Column(name="tarif")
+    private BigDecimal tarif;
     
 }
