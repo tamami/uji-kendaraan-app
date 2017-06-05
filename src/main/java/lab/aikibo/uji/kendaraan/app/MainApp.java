@@ -12,6 +12,7 @@ import lab.aikibo.uji.kendaraan.app.repo.RefJnsKendaraanRepo;
 import lab.aikibo.uji.kendaraan.app.repo.RefJnsRumahRepo;
 import lab.aikibo.uji.kendaraan.app.repo.RefPejabatRepo;
 import lab.aikibo.uji.kendaraan.app.repo.SkrdRepo;
+import lab.aikibo.uji.kendaraan.app.ui.AdmKendaraanUI;
 import lab.aikibo.uji.kendaraan.app.ui.EntrySkrdUI;
 import lab.aikibo.uji.kendaraan.app.ui.LoginUI;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,7 @@ public class MainApp implements CommandLineRunner {
     RefPejabatRepo refPejabatRepo;
     
     public static EntrySkrdUI fEntrySkrd;
+    public static AdmKendaraanUI fAdmKendaraan;
     
     public static void main(String args[]) {
         SpringApplication.run(MainApp.class, args);
@@ -63,6 +65,7 @@ public class MainApp implements CommandLineRunner {
         login.setVisible(true);
         
         fEntrySkrd = new EntrySkrdUI(this);
+        fAdmKendaraan = new AdmKendaraanUI(this);
     }
     
     public DatUserRepo getDatUserRepo() {

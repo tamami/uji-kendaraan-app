@@ -8,5 +8,7 @@ public interface SkrdRepo extends CrudRepository<Skrd, Integer> {
 
     List<Skrd> findAll();
     List<Skrd> findByNoUji(String noUji);
+    List<Skrd> findByNoUjiOrderByTglPemeriksaanDesc(String noUji);
+    Long countByNoUji(String noUji);
     
 }

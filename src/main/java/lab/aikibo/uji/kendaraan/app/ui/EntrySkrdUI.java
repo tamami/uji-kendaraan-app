@@ -42,6 +42,7 @@ public class EntrySkrdUI extends javax.swing.JFrame {
     Locale idLocale;
     LocalDate tglHabisUji;
     DefaultComboBoxModel<String> daftarPejabat = new DefaultComboBoxModel<String>();
+    Skrd skrd;
     
     /** Creates new form EntrySkrdUI */
     public EntrySkrdUI() {
@@ -115,9 +116,10 @@ public class EntrySkrdUI extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         tfNoUji = new javax.swing.JTextField();
         jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnCetakSkrd = new javax.swing.JButton();
+        btnCetakFormPendaftaran = new javax.swing.JButton();
         btnSimpan = new javax.swing.JButton();
+        btnDataBaru = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         tfNoken = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
@@ -177,18 +179,24 @@ public class EntrySkrdUI extends javax.swing.JFrame {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
 
-        jButton1.setText("SKRD");
-        jButton1.setEnabled(false);
+        btnCetakSkrd.setText("SKRD");
+        btnCetakSkrd.setEnabled(false);
 
-        jButton2.setText("Formulir Pendaftaran");
-        jButton2.setEnabled(false);
+        btnCetakFormPendaftaran.setText("Formulir Pendaftaran");
+        btnCetakFormPendaftaran.setEnabled(false);
 
+        btnSimpan.setMnemonic('S');
         btnSimpan.setText("Simpan");
+        btnSimpan.setToolTipText("");
         btnSimpan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSimpanActionPerformed(evt);
             }
         });
+
+        btnDataBaru.setMnemonic('D');
+        btnDataBaru.setText("Data Baru");
+        btnDataBaru.setEnabled(false);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -198,9 +206,11 @@ public class EntrySkrdUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(btnSimpan)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton2)
+                .addComponent(btnDataBaru)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
+                .addComponent(btnCetakFormPendaftaran)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnCetakSkrd)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -208,9 +218,10 @@ public class EntrySkrdUI extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(btnSimpan))
+                    .addComponent(btnCetakSkrd)
+                    .addComponent(btnCetakFormPendaftaran)
+                    .addComponent(btnSimpan)
+                    .addComponent(btnDataBaru))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -302,6 +313,7 @@ public class EntrySkrdUI extends javax.swing.JFrame {
         jLabel19.setText("Total Biaya");
 
         tfBiaya.setEditable(false);
+        tfBiaya.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
         jLabel20.setText("Bendahara Khusus Penerima");
 
@@ -527,8 +539,9 @@ public class EntrySkrdUI extends javax.swing.JFrame {
         cbJenisKendaraan.setSelectedIndex((((AdmKendaraan) dataAdmKendaraan.get(0)).getIdJnsKendaraan() - 1));
         tfTahunPembuatan.setText(((AdmKendaraan) dataAdmKendaraan.get(0)).getThnPembuatan());
         
-        List<Skrd> dataSkrd = mainApp.getSkrdRepo().findByNoUji(tfNoUji.getText());
-        dpTglHabisUjiLalu.setDate(((Skrd) dataSkrd.get(0)).getTglHabisUjiLalu());
+        List<Skrd> dataSkrd = mainApp.getSkrdRepo().findByNoUjiOrderByTglPemeriksaanDesc(tfNoUji.getText());
+        skrd = dataSkrd.get(0);
+        dpTglHabisUjiLalu.setDate(skrd.getTglHabisUjiLalu());
         tfBiaya.setValue(getPokok().add(getDenda()));
     }//GEN-LAST:event_tfNoUjiFocusLost
 
@@ -584,7 +597,33 @@ public class EntrySkrdUI extends javax.swing.JFrame {
                 "Apakah data pemilik akan diubah?", "Konfirmasi",
                 JOptionPane.YES_NO_OPTION);
         if(pilihan == JOptionPane.YES_OPTION) {
-            
+            mainApp.fAdmKendaraan.getTfNoken().setText(tfNoken.getText());
+            setEnabled(false);
+            mainApp.fAdmKendaraan.setVisible(true);
+            mainApp.fAdmKendaraan.getTfNoken().requestFocus();
+        } else {
+            skrd.setBiayaPemeriksaan((BigDecimal) tfBiayaPemeriksaan.getValue());
+            skrd.setBiayaBukuUji((BigDecimal) tfBiayaBukuUji.getValue());
+            skrd.setBiayaTandaUji((BigDecimal) tfBiayaTandaUji.getValue());
+            skrd.setBiayaTandaSamping((BigDecimal) tfBiayaTandaSamping.getValue());
+            skrd.setDendaAdm((BigDecimal) tfDenda.getValue());
+            skrd.setTglPemeriksaan(dpTglDaftar.getDate());
+            skrd.setTglHabisUjiLalu(dpTglHabisUjiLalu.getDate());
+            skrd.setTglHabisUjiYad(dpTglHabisUji.getDate());
+            if(LocalDate.fromDateFields(skrd.getTglPemeriksaan()).compareTo(LocalDate.fromDateFields(new Date())) == 0) {
+                // --------------------------------------------- ini harus uncomment
+                //mainApp.getSkrdRepo().save(skrd);
+                // ------------------------------------------------------------------------------------
+            } else {
+                skrd.setId(new Long(mainApp.getSkrdRepo().count() + 1).intValue());
+                // ------------------- ini harus uncomment
+                //mainApp.getSkrdRepo().save(skrd);
+                // ------------------------------------------------------------------------------------
+            }
+            JOptionPane.showMessageDialog(this, "Data telah tersimpan");
+            btnSimpan.setEnabled(false);
+            btnCetakFormPendaftaran.setEnabled(true);
+            btnCetakSkrd.setEnabled(true);
         }
     }//GEN-LAST:event_btnSimpanActionPerformed
 
@@ -658,6 +697,9 @@ public class EntrySkrdUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCetakFormPendaftaran;
+    private javax.swing.JButton btnCetakSkrd;
+    private javax.swing.JButton btnDataBaru;
     private javax.swing.ButtonGroup btnGrpGantiBuku;
     private javax.swing.JButton btnSimpan;
     private javax.swing.JComboBox<String> cbJenisKendaraan;
@@ -666,8 +708,6 @@ public class EntrySkrdUI extends javax.swing.JFrame {
     private org.jdesktop.swingx.JXDatePicker dpTglDaftar;
     private org.jdesktop.swingx.JXDatePicker dpTglHabisUji;
     private org.jdesktop.swingx.JXDatePicker dpTglHabisUjiLalu;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

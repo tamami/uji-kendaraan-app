@@ -1,20 +1,24 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package lab.aikibo.uji.kendaraan.app.ui;
 
-/**
- *
- * @author tamami <tamami.oka@gmail.com>
- */
+import java.util.List;
+import javax.swing.JTextField;
+import lab.aikibo.uji.kendaraan.app.MainApp;
+import lab.aikibo.uji.kendaraan.app.entity.AdmKendaraan;
+
 public class AdmKendaraanUI extends javax.swing.JFrame {
+    
+    MainApp mainApp;
+    AdmKendaraan dataKendaraan;
 
     /**
      * Creates new form AdmKendaraanUI
      */
     public AdmKendaraanUI() {
+        initComponents();
+    }
+    
+    public AdmKendaraanUI(MainApp mainApp) {
+        this.mainApp = mainApp;
         initComponents();
     }
 
@@ -57,10 +61,31 @@ public class AdmKendaraanUI extends javax.swing.JFrame {
         btnBatal = new javax.swing.JButton();
         btnSimpan = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Data Administrasi Kendaraan");
+        setAlwaysOnTop(true);
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentHidden(java.awt.event.ComponentEvent evt) {
+                formComponentHidden(evt);
+            }
+        });
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jLabel1.setText("Nomor Kendaraan");
+
+        tfNoken.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                tfNokenFocusGained(evt);
+            }
+        });
+        tfNoken.addVetoableChangeListener(new java.beans.VetoableChangeListener() {
+            public void vetoableChange(java.beans.PropertyChangeEvent evt)throws java.beans.PropertyVetoException {
+                tfNokenVetoableChange(evt);
+            }
+        });
 
         jLabel2.setText("Nama Pemilik");
 
@@ -237,6 +262,27 @@ public class AdmKendaraanUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        setVisible(false);
+        mainApp.fEntrySkrd.setEnabled(true);
+    }//GEN-LAST:event_formWindowClosing
+
+    private void formComponentHidden(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentHidden
+        setVisible(false);
+        mainApp.fEntrySkrd.setEnabled(true);
+    }//GEN-LAST:event_formComponentHidden
+
+    private void tfNokenVetoableChange(java.beans.PropertyChangeEvent evt)throws java.beans.PropertyVetoException {//GEN-FIRST:event_tfNokenVetoableChange
+        
+    }//GEN-LAST:event_tfNokenVetoableChange
+
+    private void tfNokenFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfNokenFocusGained
+        if(tfNoken.getText().trim().equals("")) return;
+        List<AdmKendaraan> data = mainApp.getAdmKendaraanRepo().findByNomorKendaraan(tfNoken.getText());
+        dataKendaraan = data.get(0);
+        tfPemilik.setText(dataKendaraan.getNamaPemilik());
+    }//GEN-LAST:event_tfNokenFocusGained
+
     /**
      * @param args the command line arguments
      */
@@ -270,6 +316,10 @@ public class AdmKendaraanUI extends javax.swing.JFrame {
                 new AdmKendaraanUI().setVisible(true);
             }
         });
+    }
+    
+    public JTextField getTfNoken() {
+        return tfNoken;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
