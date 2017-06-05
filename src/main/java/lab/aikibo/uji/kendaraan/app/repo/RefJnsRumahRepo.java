@@ -8,6 +8,8 @@ import org.springframework.data.repository.CrudRepository;
 public interface RefJnsRumahRepo extends CrudRepository<RefJnsRumah, RefJnsRumahPK> {
     
     List<RefJnsRumah> findAll();
+    List<RefJnsRumah> findAllByOrderById();
     List<RefJnsRumah> findByIdJnsKendaraan(int idJnsKendaraan);
+    List<RefJnsRumah> findByIdJnsKendaraanOrderById(int idJnsKendaraan);
     
 }

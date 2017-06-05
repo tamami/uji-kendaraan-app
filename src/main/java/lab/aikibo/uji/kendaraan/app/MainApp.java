@@ -7,6 +7,8 @@ import lab.aikibo.uji.kendaraan.app.entity.DatUser;
 import lab.aikibo.uji.kendaraan.app.entity.RefBiayaBukuUji;
 import lab.aikibo.uji.kendaraan.app.repo.AdmKendaraanRepo;
 import lab.aikibo.uji.kendaraan.app.repo.DatUserRepo;
+import lab.aikibo.uji.kendaraan.app.repo.RefBahanBakarRepo;
+import lab.aikibo.uji.kendaraan.app.repo.RefBahanKaroseriRepo;
 import lab.aikibo.uji.kendaraan.app.repo.RefBiayaBukuUjiRepo;
 import lab.aikibo.uji.kendaraan.app.repo.RefJnsKendaraanRepo;
 import lab.aikibo.uji.kendaraan.app.repo.RefJnsRumahRepo;
@@ -52,6 +54,12 @@ public class MainApp implements CommandLineRunner {
     @Autowired
     RefPejabatRepo refPejabatRepo;
     
+    @Autowired
+    RefBahanBakarRepo refBahanBakarRepo;
+    
+    @Autowired
+    RefBahanKaroseriRepo refBahanKaroseriRepo;
+    
     public static EntrySkrdUI fEntrySkrd;
     public static AdmKendaraanUI fAdmKendaraan;
     
@@ -94,6 +102,14 @@ public class MainApp implements CommandLineRunner {
     
     public RefPejabatRepo getRefPejabatRepo() {
         return refPejabatRepo;
+    }
+    
+    public RefBahanBakarRepo getBahanBakarRepo() {
+        return refBahanBakarRepo;
+    }
+    
+    public RefBahanKaroseriRepo getBahanKaroseriRepo() {
+        return refBahanKaroseriRepo;
     }
     
 }

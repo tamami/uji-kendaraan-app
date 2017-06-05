@@ -1,9 +1,15 @@
 package lab.aikibo.uji.kendaraan.app.ui;
 
+import java.util.Iterator;
 import java.util.List;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JTextField;
 import lab.aikibo.uji.kendaraan.app.MainApp;
 import lab.aikibo.uji.kendaraan.app.entity.AdmKendaraan;
+import lab.aikibo.uji.kendaraan.app.entity.RefBahanBakar;
+import lab.aikibo.uji.kendaraan.app.entity.RefBahanKaroseri;
+import lab.aikibo.uji.kendaraan.app.entity.RefJnsKendaraan;
+import lab.aikibo.uji.kendaraan.app.entity.RefJnsRumah;
 
 public class AdmKendaraanUI extends javax.swing.JFrame {
     
@@ -15,11 +21,47 @@ public class AdmKendaraanUI extends javax.swing.JFrame {
      */
     public AdmKendaraanUI() {
         initComponents();
+        initData();
     }
     
     public AdmKendaraanUI(MainApp mainApp) {
         this.mainApp = mainApp;
         initComponents();
+        initData();
+    }
+    
+    private void initData() {
+        Iterator<RefJnsKendaraan> dataKendaraan = mainApp.getRefJnsKendaraanRepo().findAllByOrderByIdAsc().iterator();
+        DefaultComboBoxModel jnsKendaraanModel = new DefaultComboBoxModel();
+        while(dataKendaraan.hasNext()) {
+            RefJnsKendaraan data = dataKendaraan.next();
+            jnsKendaraanModel.addElement(data.getJnsKendaraan());
+        }
+        cbJenisKendaraan.setModel(jnsKendaraanModel);
+        
+        Iterator<RefBahanBakar> dataBahanBakar = mainApp.getBahanBakarRepo().findAllByOrderById().iterator();
+        DefaultComboBoxModel bahanBakarModel = new DefaultComboBoxModel();
+        while(dataBahanBakar.hasNext()) {
+            RefBahanBakar data = dataBahanBakar.next();
+            bahanBakarModel.addElement(data.getBahanBakar());
+        }
+        cbBahanBakar.setModel(bahanBakarModel);
+        
+        Iterator<RefJnsRumah> dataRumah = mainApp.getRefJnsRumahRepo().findAllByOrderById().iterator();
+        DefaultComboBoxModel rumahModel = new DefaultComboBoxModel();
+        while(dataRumah.hasNext()) {
+            RefJnsRumah data = dataRumah.next();
+            rumahModel.addElement(data.getJnsRumah());
+        }
+        cbJnsRumah.setModel(rumahModel);
+        
+        Iterator<RefBahanKaroseri> dataBahanKaroseri = mainApp.getBahanKaroseriRepo().findAllByOrderById().iterator();
+        DefaultComboBoxModel bahanKaroseriModel = new DefaultComboBoxModel();
+        while(dataBahanKaroseri.hasNext()) {
+            RefBahanKaroseri data = dataBahanKaroseri.next();
+            bahanKaroseriModel.addElement(data.getBahan());
+        }
+        cbBahanKaroseri.setModel(bahanKaroseriModel);
     }
 
     /**
@@ -81,11 +123,6 @@ public class AdmKendaraanUI extends javax.swing.JFrame {
                 tfNokenFocusGained(evt);
             }
         });
-        tfNoken.addVetoableChangeListener(new java.beans.VetoableChangeListener() {
-            public void vetoableChange(java.beans.PropertyChangeEvent evt)throws java.beans.PropertyVetoException {
-                tfNokenVetoableChange(evt);
-            }
-        });
 
         jLabel2.setText("Nama Pemilik");
 
@@ -100,6 +137,11 @@ public class AdmKendaraanUI extends javax.swing.JFrame {
         jLabel7.setText("Jenis Kendaraan");
 
         cbJenisKendaraan.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbJenisKendaraan.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbJenisKendaraanItemStateChanged(evt);
+            }
+        });
 
         jLabel8.setText("Bahan Bakar");
 
@@ -272,16 +314,34 @@ public class AdmKendaraanUI extends javax.swing.JFrame {
         mainApp.fEntrySkrd.setEnabled(true);
     }//GEN-LAST:event_formComponentHidden
 
-    private void tfNokenVetoableChange(java.beans.PropertyChangeEvent evt)throws java.beans.PropertyVetoException {//GEN-FIRST:event_tfNokenVetoableChange
-        
-    }//GEN-LAST:event_tfNokenVetoableChange
-
     private void tfNokenFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfNokenFocusGained
         if(tfNoken.getText().trim().equals("")) return;
         List<AdmKendaraan> data = mainApp.getAdmKendaraanRepo().findByNomorKendaraan(tfNoken.getText());
         dataKendaraan = data.get(0);
         tfPemilik.setText(dataKendaraan.getNamaPemilik());
+        tfAlamat.setText(dataKendaraan.getAlamat());
+        tfMerk.setText(dataKendaraan.getMerk());
+        tfTipe.setText(dataKendaraan.getTipe());
+        tfTahunPembuatan.setText(dataKendaraan.getThnPembuatan());
+        cbJenisKendaraan.setSelectedIndex(dataKendaraan.getIdJnsKendaraan()-1);
+        cbBahanBakar.setSelectedIndex(dataKendaraan.getIdJnsBahanBakar()-1);
+        System.out.println("Jenis Rumah: " + dataKendaraan.getIdJnsRumah());
+        cbJnsRumah.setSelectedIndex(dataKendaraan.getIdJnsRumah()-1);
+        tfNomorUji.setText(dataKendaraan.getNoUji());
+        tfNomorRangka.setText(dataKendaraan.getNoRangka());
+        tfNomorMesin.setText(dataKendaraan.getNoMesin());
+        cbBahanKaroseri.setSelectedIndex(dataKendaraan.getIdBahanKeroseri()-1);
     }//GEN-LAST:event_tfNokenFocusGained
+
+    private void cbJenisKendaraanItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbJenisKendaraanItemStateChanged
+        Iterator<RefJnsRumah> dataRumah = mainApp.getRefJnsRumahRepo().findByIdJnsKendaraanOrderById(cbJenisKendaraan.getSelectedIndex()+1).iterator();
+        DefaultComboBoxModel rumahModel = new DefaultComboBoxModel();
+        while(dataRumah.hasNext()) {
+            RefJnsRumah data = dataRumah.next();
+            rumahModel.addElement(data.getJnsRumah());
+        }
+        cbJnsRumah.setModel(rumahModel);
+    }//GEN-LAST:event_cbJenisKendaraanItemStateChanged
 
     /**
      * @param args the command line arguments

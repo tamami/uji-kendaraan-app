@@ -197,6 +197,11 @@ public class EntrySkrdUI extends javax.swing.JFrame {
         btnDataBaru.setMnemonic('D');
         btnDataBaru.setText("Data Baru");
         btnDataBaru.setEnabled(false);
+        btnDataBaru.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDataBaruActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -624,9 +629,19 @@ public class EntrySkrdUI extends javax.swing.JFrame {
             btnSimpan.setEnabled(false);
             btnCetakFormPendaftaran.setEnabled(true);
             btnCetakSkrd.setEnabled(true);
+            btnDataBaru.setEnabled(true);
         }
     }//GEN-LAST:event_btnSimpanActionPerformed
 
+    private void btnDataBaruActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDataBaruActionPerformed
+        clearForm();
+    }//GEN-LAST:event_btnDataBaruActionPerformed
+
+    private void clearForm() {
+        dpTglDaftar.setDate(new Date());
+        tfNoUji.setText("");
+        
+    }
     
     private BigDecimal getPokok() {
         BigDecimal result = (BigDecimal) tfBiayaBukuUji.getValue();

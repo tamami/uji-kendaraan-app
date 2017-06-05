@@ -8,5 +8,6 @@ public interface RefJnsKendaraanRepo extends CrudRepository<RefJnsKendaraan, Int
     
     List<RefJnsKendaraan> findAll();
     List<RefJnsKendaraan> findById(int id);
+    List<RefJnsKendaraan> findAllByOrderByIdAsc();
     
 }
