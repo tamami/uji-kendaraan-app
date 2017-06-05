@@ -313,6 +313,8 @@
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="btnSimpan" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="btnPrinter" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
                   <Component id="btnDataBaru" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
@@ -332,6 +334,7 @@
                       <Component id="btnCetakFormPendaftaran" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btnSimpan" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btnDataBaru" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnPrinter" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -369,6 +372,14 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDataBaruActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnPrinter">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Printer"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPrinterActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

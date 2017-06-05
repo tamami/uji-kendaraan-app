@@ -3,6 +3,7 @@ package lab.aikibo.uji.kendaraan.app.ui;
 import java.util.Iterator;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import lab.aikibo.uji.kendaraan.app.MainApp;
 import lab.aikibo.uji.kendaraan.app.entity.AdmKendaraan;
@@ -164,8 +165,18 @@ public class AdmKendaraanUI extends javax.swing.JFrame {
         jPanel1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
 
         btnBatal.setText("Batal");
+        btnBatal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBatalActionPerformed(evt);
+            }
+        });
 
         btnSimpan.setText("Simpan");
+        btnSimpan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSimpanActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -343,6 +354,58 @@ public class AdmKendaraanUI extends javax.swing.JFrame {
         cbJnsRumah.setModel(rumahModel);
     }//GEN-LAST:event_cbJenisKendaraanItemStateChanged
 
+    private void btnBatalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBatalActionPerformed
+        mainApp.fEntrySkrd.setEnabled(true);
+        setVisible(false);
+        clearForm();
+    }//GEN-LAST:event_btnBatalActionPerformed
+
+    private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
+        if(tfNoken.getText().trim().equals("")) {
+            JOptionPane.showMessageDialog(this, "Data tidak lengkap");
+            return;
+        }
+        
+        dataKendaraan.setNomorKendaraan(tfNoken.getText());
+        dataKendaraan.setNamaPemilik(tfPemilik.getText());
+        dataKendaraan.setAlamat(tfAlamat.getText());
+        dataKendaraan.setMerk(tfMerk.getText());
+        dataKendaraan.setTipe(tfTipe.getText());
+        dataKendaraan.setThnPembuatan(tfTahunPembuatan.getText());
+        dataKendaraan.setIdJnsKendaraan(cbJenisKendaraan.getSelectedIndex()+1);
+        dataKendaraan.setIdJnsBahanBakar(cbBahanBakar.getSelectedIndex()+1);
+        dataKendaraan.setIdJnsRumah(cbJnsRumah.getSelectedIndex()+1);
+        dataKendaraan.setNoUji(tfNomorUji.getText());
+        dataKendaraan.setNoRangka(tfNomorRangka.getText());
+        dataKendaraan.setNoMesin(tfNomorMesin.getText());
+        dataKendaraan.setIdBahanKeroseri(cbBahanKaroseri.getSelectedIndex()+1);
+        
+        mainApp.getAdmKendaraanRepo().save(dataKendaraan);
+        JOptionPane.showMessageDialog(this, "Data Kendaraan Sudah Tersimpan");
+        
+        mainApp.fEntrySkrd.setEnabled(true);
+        setVisible(false);
+        clearForm();
+    }//GEN-LAST:event_btnSimpanActionPerformed
+
+    private void clearForm() {
+        tfNoken.setText("");
+        tfPemilik.setText("");
+        tfAlamat.setText("");
+        tfMerk.setText("");
+        tfTipe.setText("");
+        tfTahunPembuatan.setText("");
+        cbJenisKendaraan.setSelectedIndex(0);
+        cbBahanBakar.setSelectedIndex(0);
+        cbJnsRumah.setSelectedIndex(0);
+        tfNomorUji.setText("");
+        tfNomorRangka.setText("");
+        tfNomorMesin.setText("");
+        cbBahanKaroseri.setSelectedIndex(0);
+        
+        dataKendaraan = new AdmKendaraan();
+    }
+    
     /**
      * @param args the command line arguments
      */

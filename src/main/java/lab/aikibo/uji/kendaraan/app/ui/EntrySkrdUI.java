@@ -6,6 +6,7 @@
 
 package lab.aikibo.uji.kendaraan.app.ui;
 
+import java.awt.print.PrinterJob;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -120,6 +121,7 @@ public class EntrySkrdUI extends javax.swing.JFrame {
         btnCetakFormPendaftaran = new javax.swing.JButton();
         btnSimpan = new javax.swing.JButton();
         btnDataBaru = new javax.swing.JButton();
+        btnPrinter = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         tfNoken = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
@@ -203,6 +205,13 @@ public class EntrySkrdUI extends javax.swing.JFrame {
             }
         });
 
+        btnPrinter.setText("Printer");
+        btnPrinter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPrinterActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -210,6 +219,8 @@ public class EntrySkrdUI extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(btnSimpan)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnPrinter)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnDataBaru)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -226,7 +237,8 @@ public class EntrySkrdUI extends javax.swing.JFrame {
                     .addComponent(btnCetakSkrd)
                     .addComponent(btnCetakFormPendaftaran)
                     .addComponent(btnSimpan)
-                    .addComponent(btnDataBaru))
+                    .addComponent(btnDataBaru)
+                    .addComponent(btnPrinter))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -635,12 +647,43 @@ public class EntrySkrdUI extends javax.swing.JFrame {
 
     private void btnDataBaruActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDataBaruActionPerformed
         clearForm();
+        
+        btnSimpan.setEnabled(true);
+        btnCetakFormPendaftaran.setEnabled(false);
+        btnCetakSkrd.setEnabled(false);
+        btnDataBaru.setEnabled(false);
     }//GEN-LAST:event_btnDataBaruActionPerformed
+
+    private void btnPrinterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrinterActionPerformed
+        PrinterJob pj = PrinterJob.getPrinterJob();
+        if(pj.printDialog()) {
+            
+        }
+    }//GEN-LAST:event_btnPrinterActionPerformed
 
     private void clearForm() {
         dpTglDaftar.setDate(new Date());
         tfNoUji.setText("");
+        tfPemilik.setText("");
+        tfNoken.setText("");
+        tfAlamat.setText("");
+        cbJenisKendaraan.setSelectedIndex(0);
+        cbJnsRumah.setSelectedIndex(0);
+        tfTahunPembuatan.setText("");
+        rbTidak.setSelected(true);
+        tfBiayaBukuUji.setValue(new BigDecimal("0"));
+        tfBiayaPemeriksaan.setValue(new BigDecimal("0"));
+        tfBiayaTandaSamping.setValue(new BigDecimal("0"));
+        tfBiayaAdm.setValue(new BigDecimal("0"));
+        tfBiayaTandaUji.setValue(new BigDecimal("0"));
+        tfPokokRetribusi.setValue(getPokok());
+        dpTglHabisUji.setDate(LocalDate.fromDateFields(new Date()).plusMonths(6).toDate());
+        dpTglHabisUjiLalu.setDate(null);
+        tfDenda.setValue(getDenda());
+        tfBiaya.setValue(getPokok().add(getDenda()));
         
+        skrd = new Skrd();
+        tfNoUji.requestFocus();
     }
     
     private BigDecimal getPokok() {
@@ -716,6 +759,7 @@ public class EntrySkrdUI extends javax.swing.JFrame {
     private javax.swing.JButton btnCetakSkrd;
     private javax.swing.JButton btnDataBaru;
     private javax.swing.ButtonGroup btnGrpGantiBuku;
+    private javax.swing.JButton btnPrinter;
     private javax.swing.JButton btnSimpan;
     private javax.swing.JComboBox<String> cbJenisKendaraan;
     private javax.swing.JComboBox<String> cbJnsRumah;
