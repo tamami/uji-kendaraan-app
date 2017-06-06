@@ -1,12 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package lab.aikibo.uji.kendaraan.app.ui;
 
+import java.awt.Font;
 import java.awt.print.PrinterJob;
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -31,6 +28,10 @@ import lab.aikibo.uji.kendaraan.app.entity.Skrd;
 import lab.aikibo.uji.kendaraan.app.repo.AdmKendaraanRepo;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
+import lab.aikibo.uji.kendaraan.app.print.LinePrinter;
+import lab.aikibo.uji.kendaraan.app.report.AbstractReportGenerator;
+import lab.aikibo.uji.kendaraan.app.report.ReportGen;
+import org.pentaho.reporting.engine.classic.core.ReportProcessingException;
 
 /**
  *
@@ -44,6 +45,7 @@ public class EntrySkrdUI extends javax.swing.JFrame {
     LocalDate tglHabisUji;
     DefaultComboBoxModel<String> daftarPejabat = new DefaultComboBoxModel<String>();
     Skrd skrd;
+    AdmKendaraan admKendaraan = null;
     
     /** Creates new form EntrySkrdUI */
     public EntrySkrdUI() {
@@ -121,7 +123,6 @@ public class EntrySkrdUI extends javax.swing.JFrame {
         btnCetakFormPendaftaran = new javax.swing.JButton();
         btnSimpan = new javax.swing.JButton();
         btnDataBaru = new javax.swing.JButton();
-        btnPrinter = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         tfNoken = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
@@ -181,11 +182,22 @@ public class EntrySkrdUI extends javax.swing.JFrame {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
 
+        btnCetakSkrd.setMnemonic('K');
         btnCetakSkrd.setText("SKRD");
         btnCetakSkrd.setEnabled(false);
+        btnCetakSkrd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCetakSkrdActionPerformed(evt);
+            }
+        });
 
         btnCetakFormPendaftaran.setText("Formulir Pendaftaran");
         btnCetakFormPendaftaran.setEnabled(false);
+        btnCetakFormPendaftaran.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCetakFormPendaftaranActionPerformed(evt);
+            }
+        });
 
         btnSimpan.setMnemonic('S');
         btnSimpan.setText("Simpan");
@@ -205,13 +217,6 @@ public class EntrySkrdUI extends javax.swing.JFrame {
             }
         });
 
-        btnPrinter.setText("Printer");
-        btnPrinter.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPrinterActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -219,8 +224,6 @@ public class EntrySkrdUI extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(btnSimpan)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnPrinter)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnDataBaru)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -237,8 +240,7 @@ public class EntrySkrdUI extends javax.swing.JFrame {
                     .addComponent(btnCetakSkrd)
                     .addComponent(btnCetakFormPendaftaran)
                     .addComponent(btnSimpan)
-                    .addComponent(btnDataBaru)
-                    .addComponent(btnPrinter))
+                    .addComponent(btnDataBaru))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -550,11 +552,12 @@ public class EntrySkrdUI extends javax.swing.JFrame {
         if(tfNoUji.getText().trim().equals("")) return;
         
         List<AdmKendaraan> dataAdmKendaraan = mainApp.getAdmKendaraanRepo().findByNoUji(tfNoUji.getText());
-        tfNoken.setText(((AdmKendaraan) dataAdmKendaraan.get(0)).getNomorKendaraan());
-        tfPemilik.setText(((AdmKendaraan) dataAdmKendaraan.get(0)).getNamaPemilik());
-        tfAlamat.setText(((AdmKendaraan) dataAdmKendaraan.get(0)).getAlamat());
-        cbJenisKendaraan.setSelectedIndex((((AdmKendaraan) dataAdmKendaraan.get(0)).getIdJnsKendaraan() - 1));
-        tfTahunPembuatan.setText(((AdmKendaraan) dataAdmKendaraan.get(0)).getThnPembuatan());
+        admKendaraan = dataAdmKendaraan.get(0);
+        tfNoken.setText(admKendaraan.getNomorKendaraan());
+        tfPemilik.setText(admKendaraan.getNamaPemilik());
+        tfAlamat.setText(admKendaraan.getAlamat());
+        cbJenisKendaraan.setSelectedIndex((admKendaraan.getIdJnsKendaraan() - 1));
+        tfTahunPembuatan.setText(admKendaraan.getThnPembuatan());
         
         List<Skrd> dataSkrd = mainApp.getSkrdRepo().findByNoUjiOrderByTglPemeriksaanDesc(tfNoUji.getText());
         skrd = dataSkrd.get(0);
@@ -654,12 +657,43 @@ public class EntrySkrdUI extends javax.swing.JFrame {
         btnDataBaru.setEnabled(false);
     }//GEN-LAST:event_btnDataBaruActionPerformed
 
-    private void btnPrinterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrinterActionPerformed
-        PrinterJob pj = PrinterJob.getPrinterJob();
-        if(pj.printDialog()) {
+    private void btnCetakSkrdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakSkrdActionPerformed
+        LinePrinter lp = new LinePrinter(new Font("courier", Font.PLAIN, 14), true);
+        String jnsKendaraan = mainApp.getRefJnsKendaraanRepo().findOneById(admKendaraan.getIdJnsKendaraan()).getJnsKendaraan();
+        String jnsRumah = mainApp.getRefJnsRumahRepo().findOneByIdAndIdJnsKendaraan(admKendaraan.getIdJnsRumah(), admKendaraan.getIdJnsKendaraan()).getJnsRumah();
+        NumberFormat nf = NumberFormat.getNumberInstance(Locale.GERMAN);
+        long totalRetribusi = skrd.getBiayaPemeriksaan().add(skrd.getBiayaBukuUji()).add(skrd.getBiayaTandaUji()).add(skrd.getBiayaTandaSamping()).longValue();
+        long totalTagihan = totalRetribusi + skrd.getDendaAdm().longValue();
+        System.out.println("Total Tagihan: " + totalTagihan);
+        
+        for(int i=0; i<5; i++) lp.newLine();
+        lp.addLine("                                        " + jnsKendaraan + "-" + jnsRumah);
+        lp.addLine("   " + String.format("%1$-30s", admKendaraan.getNamaPemilik()) + "                " + String.format("%1$7s", nf.format(skrd.getBiayaPemeriksaan())));
+        lp.addLine("                                                 " + String.format("%1$7s", nf.format(skrd.getBiayaBukuUji())));
+        lp.addLine("   " + String.format("%1$-30s", admKendaraan.getAlamat()) + "                " + String.format("%1$7s", nf.format(skrd.getBiayaTandaUji())));
+        lp.addLine("                                                 " + String.format("%1$7s", nf.format(skrd.getBiayaTandaSamping())));
+        lp.addLine("   " + String.format("%1$-10s", admKendaraan.getNomorKendaraan()) + "                                             " + String.format("%1$7s", nf.format(totalRetribusi)));
+        lp.newLine();
+        lp.addLine("   " + String.format("%1$-8s", admKendaraan.getNoUji())           + "                                      " + String.format("%1$7s", nf.format(0)));
+        lp.addLine("                                                 " + String.format("%1$7s", nf.format(skrd.getDendaAdm())));
+        lp.addLine("   BERKALA                                                   " + String.format("%1$7s", nf.format(skrd.getDendaAdm())));
+        lp.newLine();
+        lp.addLine("                                                             " + String.format("%1$8s", nf.format(totalTagihan)));
+        
+        lp.formFeed();
+        lp.go();
+    }//GEN-LAST:event_btnCetakSkrdActionPerformed
+
+    private void btnCetakFormPendaftaranActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakFormPendaftaranActionPerformed
+        ReportGen report = new ReportGen(skrd.getNoUji());
+        try {
+            //report.generateReport(AbstractReportGenerator.OutputType.PDF, new File("form-pendaftaran.pdf"));
+            report.generateReport();
             
+        } catch (IllegalArgumentException ex) {
+            Logger.getLogger(EntrySkrdUI.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_btnPrinterActionPerformed
+    }//GEN-LAST:event_btnCetakFormPendaftaranActionPerformed
 
     private void clearForm() {
         dpTglDaftar.setDate(new Date());
@@ -759,7 +793,6 @@ public class EntrySkrdUI extends javax.swing.JFrame {
     private javax.swing.JButton btnCetakSkrd;
     private javax.swing.JButton btnDataBaru;
     private javax.swing.ButtonGroup btnGrpGantiBuku;
-    private javax.swing.JButton btnPrinter;
     private javax.swing.JButton btnSimpan;
     private javax.swing.JComboBox<String> cbJenisKendaraan;
     private javax.swing.JComboBox<String> cbJnsRumah;

@@ -11,5 +11,6 @@ public interface RefJnsRumahRepo extends CrudRepository<RefJnsRumah, RefJnsRumah
     List<RefJnsRumah> findAllByOrderById();
     List<RefJnsRumah> findByIdJnsKendaraan(int idJnsKendaraan);
     List<RefJnsRumah> findByIdJnsKendaraanOrderById(int idJnsKendaraan);
+    RefJnsRumah findOneByIdAndIdJnsKendaraan(int id, int idJnsKendaraan);
     
 }

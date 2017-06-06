@@ -15,5 +15,6 @@ public interface AdmKendaraanRepo extends CrudRepository<AdmKendaraan, AdmKendar
     List<AdmKendaraan> findByNoUji(String noUji);
     List<AdmKendaraan> findAll();
     List<AdmKendaraan> findByNomorKendaraan(String noken);
+    AdmKendaraan findOneByNoUji(String noUji);
 
 }
