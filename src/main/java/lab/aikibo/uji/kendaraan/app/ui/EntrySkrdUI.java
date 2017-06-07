@@ -665,8 +665,14 @@ public class EntrySkrdUI extends javax.swing.JFrame {
         long totalRetribusi = skrd.getBiayaPemeriksaan().add(skrd.getBiayaBukuUji()).add(skrd.getBiayaTandaUji()).add(skrd.getBiayaTandaSamping()).longValue();
         long totalTagihan = totalRetribusi + skrd.getDendaAdm().longValue();
         System.out.println("Total Tagihan: " + totalTagihan);
+        LocalDate tglPeriksa = LocalDate.fromDateFields(skrd.getTglPemeriksaan());
+        RefPejabat dataPejabat = (RefPejabat) mainApp.getRefPejabatRepo().findOneByNip(skrd.getNipPejabat());
         
-        for(int i=0; i<5; i++) lp.newLine();
+        //for(int i=0; i<5; i++) lp.newLine();
+        lp.newLine();
+        lp.newLine();
+        lp.addLine("                                                 " + String.format("%1$8s", nf.format(skrd.getId())));
+        lp.newLine(); lp.newLine();
         lp.addLine("                                        " + jnsKendaraan + "-" + jnsRumah);
         lp.addLine("   " + String.format("%1$-30s", admKendaraan.getNamaPemilik()) + "                " + String.format("%1$7s", nf.format(skrd.getBiayaPemeriksaan())));
         lp.addLine("                                                 " + String.format("%1$7s", nf.format(skrd.getBiayaBukuUji())));
@@ -676,14 +682,72 @@ public class EntrySkrdUI extends javax.swing.JFrame {
         lp.newLine();
         lp.addLine("   " + String.format("%1$-8s", admKendaraan.getNoUji())           + "                                      " + String.format("%1$7s", nf.format(0)));
         lp.addLine("                                                 " + String.format("%1$7s", nf.format(skrd.getDendaAdm())));
-        lp.addLine("   BERKALA                                                   " + String.format("%1$7s", nf.format(skrd.getDendaAdm())));
+        lp.addLine("   BERKALA                                                " + String.format("%1$7s", nf.format(skrd.getDendaAdm())));
+        lp.addLine("                                                         " + String.format("%1$8s", nf.format(0)));
+        lp.addLine("                                                         " + String.format("%1$8s", nf.format(0)));
+        lp.addLine("                                                     Rp. " + String.format("%1$8s", nf.format(totalTagihan)));
+        for(int i=0; i<1; i++) lp.newLine();
+        lp.addLine("                                                 " + getHari(tglPeriksa.getDayOfWeek()) + ", " + tglPeriksa.getDayOfMonth() + " " +
+                getBulan(tglPeriksa.getMonthOfYear()) + " " + tglPeriksa.getYear());
         lp.newLine();
-        lp.addLine("                                                      Rp. " + String.format("%1$8s", nf.format(totalTagihan)));
-        
+        for(int i=0; i<4; i++) lp.newLine();
+        lp.addLine("      " + String.format("%1$-30s", admKendaraan.getNamaPemilik()));
+        lp.addLine("                                           " + dataPejabat.getNama());
+        lp.addLine("                                              " + dataPejabat.getNip());
         lp.formFeed();
         lp.go();
     }//GEN-LAST:event_btnCetakSkrdActionPerformed
 
+    private String getHari(int hari) {
+        switch(hari) {
+            case 1: 
+                return "Senin";
+            case 2: 
+                return "Selasa";
+            case 3:
+                return "Rabu";
+            case 4: 
+                return "Kamis";
+            case 5:
+                return "Jumat";
+            case 6:
+                return "Sabtu";
+            case 7:
+                return "Minggu";
+        }
+        return null;
+    }
+    
+    private String getBulan(int bulan) {
+        switch(bulan) {
+            case 1: 
+                return "Januari";
+            case 2:
+                return "Februari";
+            case 3:
+                return "Maret";
+            case 4:
+                return "April";
+            case 5:
+                return "Mei";
+            case 6:
+                return "Juni";
+            case 7:
+                return "Juli";
+            case 8:
+                return "Agustus";
+            case 9:
+                return "September";
+            case 10:
+                return "Oktober";
+            case 11:
+                return "November";
+            case 12:
+                return "Desember";
+        }
+        return null;
+    }
+    
     private void btnCetakFormPendaftaranActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakFormPendaftaranActionPerformed
         ReportGen report = new ReportGen(skrd.getNoUji());
         try {

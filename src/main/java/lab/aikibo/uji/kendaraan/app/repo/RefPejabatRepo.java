@@ -8,6 +8,6 @@ public interface RefPejabatRepo extends CrudRepository<RefPejabat, String> {
     
     List<RefPejabat> findAll();
     List<RefPejabat> findByNama(String nama);
-    List<RefPejabat> findByNip(String nip);
+    RefPejabat findOneByNip(String nip);
     
 }
