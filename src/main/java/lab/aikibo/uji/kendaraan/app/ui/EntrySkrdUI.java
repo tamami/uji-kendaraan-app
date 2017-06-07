@@ -631,14 +631,10 @@ public class EntrySkrdUI extends javax.swing.JFrame {
             skrd.setTglHabisUjiLalu(dpTglHabisUjiLalu.getDate());
             skrd.setTglHabisUjiYad(dpTglHabisUji.getDate());
             if(LocalDate.fromDateFields(skrd.getTglPemeriksaan()).compareTo(LocalDate.fromDateFields(new Date())) == 0) {
-                // --------------------------------------------- ini harus uncomment
-                //mainApp.getSkrdRepo().save(skrd);
-                // ------------------------------------------------------------------------------------
+                mainApp.getSkrdRepo().save(skrd);
             } else {
                 skrd.setId(new Long(mainApp.getSkrdRepo().count() + 1).intValue());
-                // ------------------- ini harus uncomment
-                //mainApp.getSkrdRepo().save(skrd);
-                // ------------------------------------------------------------------------------------
+                mainApp.getSkrdRepo().save(skrd);
             }
             JOptionPane.showMessageDialog(this, "Data telah tersimpan");
             btnSimpan.setEnabled(false);
