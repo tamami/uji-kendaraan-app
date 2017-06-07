@@ -678,7 +678,7 @@ public class EntrySkrdUI extends javax.swing.JFrame {
         lp.addLine("                                                 " + String.format("%1$7s", nf.format(skrd.getDendaAdm())));
         lp.addLine("   BERKALA                                                   " + String.format("%1$7s", nf.format(skrd.getDendaAdm())));
         lp.newLine();
-        lp.addLine("                                                             " + String.format("%1$8s", nf.format(totalTagihan)));
+        lp.addLine("                                                      Rp. " + String.format("%1$8s", nf.format(totalTagihan)));
         
         lp.formFeed();
         lp.go();
