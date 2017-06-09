@@ -15,9 +15,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.MaskFormatter;
 import javax.swing.text.NumberFormatter;
+import javax.swing.text.PlainDocument;
 import lab.aikibo.uji.kendaraan.app.MainApp;
 import lab.aikibo.uji.kendaraan.app.entity.AdmKendaraan;
 import lab.aikibo.uji.kendaraan.app.entity.RefBiayaBukuUji;
@@ -54,6 +57,8 @@ public class EntrySkrdUI extends javax.swing.JFrame {
     }
     
     private void initData() {
+        MaxLengthTextDocument maxLength = new MaxLengthTextDocument(8);
+        tfNoUji.setDocument(maxLength);
         dpTglDaftar.setDate(new Date());
         tglHabisUji = LocalDate.now().plusMonths(6);
         
@@ -811,6 +816,22 @@ public class EntrySkrdUI extends javax.swing.JFrame {
         }
         
         return result;
+    }
+    
+    public class MaxLengthTextDocument extends PlainDocument {
+        private int maxChars;
+        
+        @Override
+        public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
+            if(str != null && (getLength() + str.length() <= maxChars)) {
+                super.insertString(offs, str, a);
+            }
+        }
+        
+        public MaxLengthTextDocument(int maxChars) {
+            this.maxChars = maxChars;
+        }
+        
     }
     
     /**
