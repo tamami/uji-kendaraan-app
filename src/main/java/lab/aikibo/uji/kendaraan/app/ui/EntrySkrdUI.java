@@ -177,6 +177,12 @@ public class EntrySkrdUI extends javax.swing.JFrame {
 
         jLabel1.setText("Tgl Pendaftaran");
 
+        dpTglDaftar.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                dpTglDaftarPropertyChange(evt);
+            }
+        });
+
         jLabel2.setText("No Uji");
 
         tfNoUji.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -567,6 +573,10 @@ public class EntrySkrdUI extends javax.swing.JFrame {
         List<Skrd> dataSkrd = mainApp.getSkrdRepo().findByNoUjiOrderByTglPemeriksaanDesc(tfNoUji.getText());
         skrd = dataSkrd.get(0);
         dpTglHabisUjiLalu.setDate(skrd.getTglHabisUjiLalu());
+        
+        
+        tfDenda.setValue(getDenda());
+        
         tfBiaya.setValue(getPokok().add(getDenda()));
     }//GEN-LAST:event_tfNoUjiFocusLost
 
@@ -583,6 +593,8 @@ public class EntrySkrdUI extends javax.swing.JFrame {
             List<RefJnsKendaraan> dataJnsKendaraan = mainApp.getRefJnsKendaraanRepo().findById(cbJenisKendaraan.getSelectedIndex() + 1);
             tfBiayaPemeriksaan.setValue(((RefJnsKendaraan) dataJnsKendaraan.get(0)).getTrfPemeriksaan());
         }
+        if(admKendaraan != null)
+            cbJnsRumah.setSelectedIndex(admKendaraan.getIdJnsRumah() - 1);
         
         rbTidak.setSelected(true);
         
@@ -595,7 +607,7 @@ public class EntrySkrdUI extends javax.swing.JFrame {
             tfBiaya.setValue(getPokok().add(getDenda()));
         }
         
-        
+        //tfDenda.setValue(getDenda());
     }//GEN-LAST:event_cbJenisKendaraanItemStateChanged
 
     private void rbYaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbYaItemStateChanged
@@ -627,20 +639,23 @@ public class EntrySkrdUI extends javax.swing.JFrame {
             mainApp.fAdmKendaraan.setVisible(true);
             mainApp.fAdmKendaraan.getTfNoken().requestFocus();
         } else {
+            if(skrd.getTglPemeriksaan().compareTo(dpTglDaftar.getDate()) != 0) {
+                skrd.setId(new Long(mainApp.getSkrdRepo().count() + 1).intValue());
+            }
             skrd.setBiayaPemeriksaan((BigDecimal) tfBiayaPemeriksaan.getValue());
             skrd.setBiayaBukuUji((BigDecimal) tfBiayaBukuUji.getValue());
             skrd.setBiayaTandaUji((BigDecimal) tfBiayaTandaUji.getValue());
             skrd.setBiayaTandaSamping((BigDecimal) tfBiayaTandaSamping.getValue());
             skrd.setDendaAdm((BigDecimal) tfDenda.getValue());
             skrd.setTglPemeriksaan(dpTglDaftar.getDate());
-            skrd.setTglHabisUjiLalu(dpTglHabisUjiLalu.getDate());
-            skrd.setTglHabisUjiYad(dpTglHabisUji.getDate());
-            if(LocalDate.fromDateFields(skrd.getTglPemeriksaan()).compareTo(LocalDate.fromDateFields(new Date())) == 0) {
+            skrd.setTglHabisUjiLalu(dpTglHabisUji.getDate());
+            //skrd.setTglHabisUjiYad(dpTglHabisUji.getDate());
+            //if(LocalDate.fromDateFields(skrd.getTglPemeriksaan()).compareTo(LocalDate.fromDateFields(new Date())) == 0) {
                 mainApp.getSkrdRepo().save(skrd);
-            } else {
-                skrd.setId(new Long(mainApp.getSkrdRepo().count() + 1).intValue());
-                mainApp.getSkrdRepo().save(skrd);
-            }
+//            } else {
+//                skrd.setId(new Long(mainApp.getSkrdRepo().count() + 1).intValue());
+//                mainApp.getSkrdRepo().save(skrd);
+//            }
             JOptionPane.showMessageDialog(this, "Data telah tersimpan");
             btnSimpan.setEnabled(false);
             btnCetakFormPendaftaran.setEnabled(true);
@@ -760,6 +775,16 @@ public class EntrySkrdUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnCetakFormPendaftaranActionPerformed
 
+    private void dpTglDaftarPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_dpTglDaftarPropertyChange
+        if(dpTglDaftar.getDate() == null) return;
+        LocalDate tglDaftar = LocalDate.fromDateFields(dpTglDaftar.getDate());
+        LocalDate tglHabisUji = tglDaftar.plusMonths(6);
+        
+        dpTglHabisUji.setDate(tglHabisUji.toDate());
+        
+        tfDenda.setValue(getDenda());
+    }//GEN-LAST:event_dpTglDaftarPropertyChange
+
     private void clearForm() {
         dpTglDaftar.setDate(new Date());
         tfNoUji.setText("");
@@ -797,10 +822,18 @@ public class EntrySkrdUI extends javax.swing.JFrame {
     
     private BigDecimal getDenda() {
         BigDecimal result = new BigDecimal("0");
-        LocalDate tglDaftar = LocalDate.now();
-        if(dpTglDaftar.getDate() != null) LocalDate.fromDateFields(dpTglDaftar.getDate());
-        LocalDate tglHabisUjiLalu = LocalDate.now();
-        if(dpTglHabisUjiLalu.getDate() != null) LocalDate.fromDateFields(dpTglHabisUjiLalu.getDate());
+        LocalDate tglDaftar;
+        if(dpTglDaftar.getDate() != null) {
+            tglDaftar = LocalDate.fromDateFields(dpTglDaftar.getDate());
+        } else {
+            tglDaftar = LocalDate.now();
+        }
+        LocalDate tglHabisUjiLalu;
+        if(dpTglHabisUjiLalu.getDate() != null) {
+            tglHabisUjiLalu = LocalDate.fromDateFields(dpTglHabisUjiLalu.getDate());
+        } else {
+            tglHabisUjiLalu = LocalDate.now();
+        }
         BigDecimal denda = new BigDecimal("0.02");
         
         if(tglDaftar.isAfter(tglHabisUjiLalu)) {
@@ -811,8 +844,9 @@ public class EntrySkrdUI extends javax.swing.JFrame {
             } else {
                 selisihBulan = tglDaftar.getMonthOfYear() - tglHabisUjiLalu.getMonthOfYear();
             }
-            result = result.multiply(pokok);
+            result = result.add(pokok);
             result = result.multiply(new BigDecimal(selisihBulan));
+            result = result.multiply(denda);
         }
         
         return result;
