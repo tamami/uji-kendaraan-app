@@ -576,6 +576,9 @@
       </Properties>
     </Component>
     <Component class="org.jdesktop.swingx.JXDatePicker" name="dpTglHabisUjiLalu">
+      <Events>
+        <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="dpTglHabisUjiLaluFocusLost"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel18">
       <Properties>

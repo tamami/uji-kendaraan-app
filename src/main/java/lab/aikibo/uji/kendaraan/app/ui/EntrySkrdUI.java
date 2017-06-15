@@ -335,6 +335,12 @@ public class EntrySkrdUI extends javax.swing.JFrame {
 
         jLabel17.setText("Habis Uji Lalu");
 
+        dpTglHabisUjiLalu.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                dpTglHabisUjiLaluFocusLost(evt);
+            }
+        });
+
         jLabel18.setText("Denda 2%");
 
         tfDenda.setEditable(false);
@@ -573,8 +579,10 @@ public class EntrySkrdUI extends javax.swing.JFrame {
         List<Skrd> dataSkrd = mainApp.getSkrdRepo().findByNoUjiOrderByTglPemeriksaanDesc(tfNoUji.getText());
         skrd = dataSkrd.get(0);
         dpTglHabisUjiLalu.setDate(skrd.getTglHabisUjiLalu());
+        dpTglHabisUjiLalu.requestFocus();
+        btnSimpan.requestFocus();
         
-        
+        System.out.println("hitung denda");
         tfDenda.setValue(getDenda());
         
         tfBiaya.setValue(getPokok().add(getDenda()));
@@ -603,8 +611,8 @@ public class EntrySkrdUI extends javax.swing.JFrame {
         tfBiayaTandaUji.setValue(new BigDecimal("10000"));
         if(tfBiayaBukuUji.getValue() != null && tfBiayaPemeriksaan.getValue() != null) {
             tfPokokRetribusi.setValue(getPokok());
-            tfDenda.setValue(getDenda());
-            tfBiaya.setValue(getPokok().add(getDenda()));
+            //tfDenda.setValue(getDenda());
+            //tfBiaya.setValue(getPokok().add(getDenda()));
         }
         
         //tfDenda.setValue(getDenda());
@@ -782,8 +790,16 @@ public class EntrySkrdUI extends javax.swing.JFrame {
         
         dpTglHabisUji.setDate(tglHabisUji.toDate());
         
-        tfDenda.setValue(getDenda());
+        if(dpTglHabisUjiLalu.getDate() != null && tglDaftar.compareTo(LocalDate.fromDateFields(dpTglHabisUjiLalu.getDate())) > 0 ) {
+            System.out.println("denda : " + getDenda());
+            tfDenda.setValue(getDenda());
+        }
+        
     }//GEN-LAST:event_dpTglDaftarPropertyChange
+
+    private void dpTglHabisUjiLaluFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_dpTglHabisUjiLaluFocusLost
+        tfDenda.setValue(getDenda());
+    }//GEN-LAST:event_dpTglHabisUjiLaluFocusLost
 
     private void clearForm() {
         dpTglDaftar.setDate(new Date());
@@ -828,8 +844,10 @@ public class EntrySkrdUI extends javax.swing.JFrame {
         } else {
             tglDaftar = LocalDate.now();
         }
+        
         LocalDate tglHabisUjiLalu;
-        if(dpTglHabisUjiLalu.getDate() != null) {
+        
+        if(skrd.getTglHabisUjiLalu() != null) {
             tglHabisUjiLalu = LocalDate.fromDateFields(dpTglHabisUjiLalu.getDate());
         } else {
             tglHabisUjiLalu = LocalDate.now();
@@ -844,11 +862,11 @@ public class EntrySkrdUI extends javax.swing.JFrame {
             } else {
                 selisihBulan = tglDaftar.getMonthOfYear() - tglHabisUjiLalu.getMonthOfYear();
             }
-            result = result.add(pokok);
-            result = result.multiply(new BigDecimal(selisihBulan));
+            result = result.add(pokok); System.out.println("pokok: " + pokok);
+            result = result.multiply(new BigDecimal(selisihBulan)); System.out.println("bulan: " + selisihBulan);
             result = result.multiply(denda);
         }
-        
+        System.out.println("denda : " + result);
         return result;
     }
     
