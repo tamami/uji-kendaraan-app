@@ -807,8 +807,8 @@ public class EntrySkrdUI extends javax.swing.JFrame {
         tfPemilik.setText("");
         tfNoken.setText("");
         tfAlamat.setText("");
-        cbJenisKendaraan.setSelectedIndex(0);
         cbJnsRumah.setSelectedIndex(0);
+        cbJenisKendaraan.setSelectedIndex(0);
         tfTahunPembuatan.setText("");
         rbTidak.setSelected(true);
         tfBiayaBukuUji.setValue(new BigDecimal("0"));

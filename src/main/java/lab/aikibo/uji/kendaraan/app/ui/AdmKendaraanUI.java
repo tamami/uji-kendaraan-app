@@ -1,5 +1,6 @@
 package lab.aikibo.uji.kendaraan.app.ui;
 
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
@@ -379,6 +380,7 @@ public class AdmKendaraanUI extends javax.swing.JFrame {
         dataKendaraan.setNoRangka(tfNomorRangka.getText());
         dataKendaraan.setNoMesin(tfNomorMesin.getText());
         dataKendaraan.setIdBahanKeroseri(cbBahanKaroseri.getSelectedIndex()+1);
+        dataKendaraan.setTglRekam(new Date());
         
         mainApp.getAdmKendaraanRepo().save(dataKendaraan);
         JOptionPane.showMessageDialog(this, "Data Kendaraan Sudah Tersimpan");
