@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -601,7 +602,7 @@ public class EntrySkrdUI extends javax.swing.JFrame {
             List<RefJnsKendaraan> dataJnsKendaraan = mainApp.getRefJnsKendaraanRepo().findById(cbJenisKendaraan.getSelectedIndex() + 1);
             tfBiayaPemeriksaan.setValue(((RefJnsKendaraan) dataJnsKendaraan.get(0)).getTrfPemeriksaan());
         }
-        if(admKendaraan != null)
+        if(admKendaraan != null && cbJnsRumah.getModel().getSize() >= admKendaraan.getIdJnsRumah() - 1)
             cbJnsRumah.setSelectedIndex(admKendaraan.getIdJnsRumah() - 1);
         
         rbTidak.setSelected(true);
@@ -807,8 +808,6 @@ public class EntrySkrdUI extends javax.swing.JFrame {
         tfPemilik.setText("");
         tfNoken.setText("");
         tfAlamat.setText("");
-        cbJnsRumah.setSelectedIndex(0);
-        cbJenisKendaraan.setSelectedIndex(0);
         tfTahunPembuatan.setText("");
         rbTidak.setSelected(true);
         tfBiayaBukuUji.setValue(new BigDecimal("0"));
@@ -848,7 +847,7 @@ public class EntrySkrdUI extends javax.swing.JFrame {
         LocalDate tglHabisUjiLalu;
         
         if(skrd.getTglHabisUjiLalu() != null) {
-            tglHabisUjiLalu = LocalDate.fromDateFields(dpTglHabisUjiLalu.getDate());
+            tglHabisUjiLalu = LocalDate.fromDateFields(skrd.getTglHabisUjiLalu());
         } else {
             tglHabisUjiLalu = LocalDate.now();
         }
