@@ -855,17 +855,52 @@ public class EntrySkrdUI extends javax.swing.JFrame {
         
         if(tglDaftar.isAfter(tglHabisUjiLalu)) {
             BigDecimal pokok = (BigDecimal) tfPokokRetribusi.getValue();
-            int selisihBulan = 0;
-            if(tglDaftar.getDayOfMonth() > tglHabisUjiLalu.getDayOfMonth()) { 
-                selisihBulan = tglDaftar.getMonthOfYear() - tglHabisUjiLalu.getMonthOfYear() + 1;
-            } else {
-                selisihBulan = tglDaftar.getMonthOfYear() - tglHabisUjiLalu.getMonthOfYear();
-            }
+            int selisihBulan = compareTwoMonth(tglDaftar, tglHabisUjiLalu);
             result = result.add(pokok); System.out.println("pokok: " + pokok);
             result = result.multiply(new BigDecimal(selisihBulan)); System.out.println("bulan: " + selisihBulan);
             result = result.multiply(denda);
         }
         System.out.println("denda : " + result);
+        return result;
+    }
+    
+    private int compareTwoMonth(LocalDate date1, LocalDate date2) {
+        int result = 0;
+        int yearDist = 0;
+        
+        if(date1.getYear() <= date2.getYear()) {
+            if(date1.getMonthOfYear() <= date2.getMonthOfYear()) {
+                if(date1.getDayOfMonth() <= date2.getDayOfMonth()) {
+                    return result;
+                } else if(date1.getDayOfMonth() > date2.getDayOfMonth()) {
+                    result = 1;
+                }
+            } else if(date1.getMonthOfYear() > date2.getMonthOfYear()) {
+                if(date1.getDayOfMonth() <= date2.getDayOfMonth()) {
+                    result = date1.getMonthOfYear() - date2.getMonthOfYear();
+                } else if(date1.getDayOfMonth() > date2.getDayOfMonth()) {
+                    result = date1.getMonthOfYear() - date2.getMonthOfYear() + 1;
+                }
+            }
+        } else if(date1.getYear() > date2.getYear()) {
+            yearDist = date1.getYear() - date2.getYear();
+            if(date1.getMonthOfYear() <= date2.getMonthOfYear()) {
+                result = (yearDist * 12) - date2.getMonthOfYear() + date1.getMonthOfYear();
+                if(date1.getDayOfMonth() <= date2.getDayOfMonth()) {
+                    return result;
+                } else if(date1.getDayOfMonth() > date2.getDayOfMonth()) {
+                    result += 1;
+                }
+            } else if(date1.getMonthOfYear() > date2.getMonthOfYear()) {
+                result = (yearDist * 12) + date1.getMonthOfYear() - date2.getMonthOfYear();
+                if(date1.getDayOfMonth() <= date2.getDayOfMonth()) {
+                    return result;
+                } else if(date1.getDayOfMonth() > date2.getDayOfMonth()) {
+                    result += 1;
+                }
+            }
+        }
+        
         return result;
     }
     
