@@ -355,6 +355,11 @@ public class EntrySkrdUI extends javax.swing.JFrame {
         tfJabatan.setEditable(false);
 
         dpTglDaftar.setFormats(dateFormatter);
+        dpTglDaftar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dpTglDaftarActionPerformed(evt);
+            }
+        });
 
         dpTglHabisUji.setFormats(dateFormatter);
 
@@ -795,23 +800,17 @@ public class EntrySkrdUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnCetakFormPendaftaranActionPerformed
 
-    private void dpTglDaftarPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_dpTglDaftarPropertyChange
-        if(dpTglDaftar.getDate() == null) return;
-        LocalDate tglDaftar = LocalDate.fromDateFields(dpTglDaftar.getDate());
-        LocalDate tglHabisUji = tglDaftar.plusMonths(6);
-        
-        dpTglHabisUji.setDate(tglHabisUji.toDate());
-        
-        if(dpTglHabisUjiLalu.getDate() != null && tglDaftar.compareTo(LocalDate.fromDateFields(dpTglHabisUjiLalu.getDate())) > 0 ) {
-            System.out.println("denda : " + getDenda());
-            tfDenda.setValue(getDenda());
-        }
-        
-    }//GEN-LAST:event_dpTglDaftarPropertyChange
-
     private void dpTglHabisUjiLaluFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_dpTglHabisUjiLaluFocusLost
         tfDenda.setValue(getDenda());
     }//GEN-LAST:event_dpTglHabisUjiLaluFocusLost
+
+    private void dpTglDaftarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dpTglDaftarActionPerformed
+        LocalDate tglDaftar = LocalDate.fromDateFields(dpTglDaftar.getDate());
+        LocalDate tglHabisUji = tglDaftar.plusMonths(6);
+        dpTglHabisUji.setDate(tglHabisUji.toDate());
+        
+        tfDenda.setValue(getDenda());
+    }//GEN-LAST:event_dpTglDaftarActionPerformed
 
     private void clearForm() {
         dpTglDaftar.setDate(new Date());
