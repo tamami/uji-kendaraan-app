@@ -664,9 +664,10 @@ public class EntrySkrdUI extends javax.swing.JFrame {
             mainApp.fAdmKendaraan.setVisible(true);
             mainApp.fAdmKendaraan.getTfNoken().requestFocus();
         } else {
-            if(skrd.getTglPemeriksaan().compareTo(dpTglDaftar.getDate()) != 0) {
-                skrd.setId(new Long(mainApp.getSkrdRepo().count() + 1).intValue());
-            }
+            //if(skrd.getTglPemeriksaan().compareTo(dpTglDaftar.getDate()) != 0) {
+            //    skrd.setId(new Long(mainApp.getSkrdRepo().count() + 1).intValue());
+            //}
+            skrd.setId((int) tfNoUrut.getValue());
             skrd.setBiayaPemeriksaan((BigDecimal) tfBiayaPemeriksaan.getValue());
             skrd.setBiayaBukuUji((BigDecimal) tfBiayaBukuUji.getValue());
             skrd.setBiayaTandaUji((BigDecimal) tfBiayaTandaUji.getValue());
@@ -674,7 +675,6 @@ public class EntrySkrdUI extends javax.swing.JFrame {
             skrd.setDendaAdm((BigDecimal) tfDenda.getValue());
             skrd.setTglPemeriksaan(dpTglDaftar.getDate());
             skrd.setTglHabisUjiLalu(dpTglHabisUji.getDate());
-            //skrd.setTglHabisUjiYad(dpTglHabisUji.getDate());
             //if(LocalDate.fromDateFields(skrd.getTglPemeriksaan()).compareTo(LocalDate.fromDateFields(new Date())) == 0) {
                 mainApp.getSkrdRepo().save(skrd);
 //            } else {
@@ -814,6 +814,7 @@ public class EntrySkrdUI extends javax.swing.JFrame {
 
     private void clearForm() {
         dpTglDaftar.setDate(new Date());
+        tfNoUrut.setText("");
         tfNoUji.setText("");
         tfPemilik.setText("");
         tfNoken.setText("");

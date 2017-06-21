@@ -44,9 +44,6 @@ public class Skrd {
     @Column(name="habis_uji_lalu")
     private Date tglHabisUjiLalu;
     
-    @Column(name="habis_uji_yad")
-    private Date tglHabisUjiYad;
-    
     @Column(name="nip_pejabat")
     private String nipPejabat;
     
