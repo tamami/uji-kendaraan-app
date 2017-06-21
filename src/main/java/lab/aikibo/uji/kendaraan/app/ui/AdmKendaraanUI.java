@@ -384,6 +384,7 @@ public class AdmKendaraanUI extends javax.swing.JFrame {
             return;
         }
         
+        dataKendaraan.setId((int) tfNoPendaftaran.getValue());
         dataKendaraan.setNomorKendaraan(tfNoken.getText());
         dataKendaraan.setNamaPemilik(tfPemilik.getText());
         dataKendaraan.setAlamat(tfAlamat.getText());
